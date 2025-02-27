@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
       title: 'Pizza Shop',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
+      // home: HomePage(),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => ProductListPage(),
-        '/products-list': (ctx) => ProductListPage(),
-        '/cart': (ctx) => CartPage(),
+        '/': (context) => HomePage(),
+        '/product-list': (context) => ProductListPage(),
       },
     );
   }

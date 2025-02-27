@@ -112,42 +112,50 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ],
       ),
-      // Add to Cart Button
       bottomNavigationBar: BottomAppBar(
+        height: 130,
         child: Column(
+          mainAxisSize: MainAxisSize.min, // Ensure it takes minimum space
           children: [
+            // Quantity Controls (First Row)
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
                   icon: Icon(Icons.remove_circle_outline),
                   onPressed: decrementQuantity,
                 ),
-                Text(quantity.toString(),
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  quantity.toString(),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   onPressed: incrementQuantity,
                 ),
-                Container(
-                  height: 50,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      print("da them san pham");
-                    },
-                    child: Text(
-                      "Thêm vào giỏ hàng",
-                      style: TextStyle(fontSize: 18),
-                    ),
+              ],
+            ),
+
+            // Add to Cart Button (Second Row)
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-              ],
+                onPressed: () {
+                  print("da them san pham");
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Text(
+                    "Thêm vào giỏ hàng",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
