@@ -29,7 +29,7 @@ class ProductCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
               child: Image.asset(
-                'assets/images/pizza.png',
+                product.imageUrl,
                 height: 120, // Fixed height for the image
                 width: double.infinity,
                 fit: BoxFit.cover,

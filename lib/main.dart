@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../themes/app_theme.dart';
 import 'ui/pages/home_page.dart';
+import 'ui/pages/cart_page.dart';
 import 'ui/pages/product_list_page.dart';
 
 void main() {
@@ -18,7 +19,12 @@ class MyApp extends StatelessWidget {
       title: 'Pizza Shop',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      home: ProductListPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (ctx) => ProductListPage(),
+        '/products-list': (ctx) => ProductListPage(),
+        '/cart': (ctx) => CartPage(),
+      },
     );
   }
 }
