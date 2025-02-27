@@ -18,7 +18,12 @@ class MyApp extends StatelessWidget {
       title: 'Pizza Shop',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      home: ProductListPage(),
+      // home: HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/product-list': (context) => ProductListPage(),
+      },
     );
   }
 }

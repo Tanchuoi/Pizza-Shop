@@ -25,10 +25,6 @@ class ProductListPage extends StatelessWidget {
           height: 40,
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
-        ),
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
