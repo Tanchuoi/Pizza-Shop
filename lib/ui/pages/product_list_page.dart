@@ -31,7 +31,7 @@ class ProductListPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.black),
+            icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
             onPressed: () {},
           ),
         ],
@@ -89,19 +89,27 @@ class ProductListPage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
-          padding: EdgeInsets.all(10),
-          color: Colors.green,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Thanh toán • 7 món",
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-              Text("583,000đ",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-            ],
+          height: 50,
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: FilledButton(
+            style: FilledButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () {
+              print("da them san pham");
+            },
+            child: SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(child: Text("Thanh toán: 4 món")),
+                  Text("123,966,667đ")
+                ],
+              ),
+            ),
           ),
         ),
       ),
