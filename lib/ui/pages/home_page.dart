@@ -1,3 +1,4 @@
+import 'package:ct312h_project/ui/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 
@@ -28,19 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(
-          "assets/images/logo.png",
-          height: 40,
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
       bottomNavigationBar: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -82,9 +71,8 @@ class _HomePageState extends State<HomePage> {
                 const Text(
                   'Thực đơn',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
               ],

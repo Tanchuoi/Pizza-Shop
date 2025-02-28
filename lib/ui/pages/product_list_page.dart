@@ -18,7 +18,6 @@ class ProductListPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         title: Image.asset(
           "assets/images/logo.png",

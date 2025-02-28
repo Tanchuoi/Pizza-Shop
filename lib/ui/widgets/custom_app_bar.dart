@@ -1,30 +1,42 @@
+import 'package:ct312h_project/ui/shared/theme_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// TODO: Implement CustomAppBar
-class CustomAppBar extends StatefulWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
   @override
-  State<CustomAppBar> createState() => _CustomAppBarState();
-}
-
-class _CustomAppBarState extends State<CustomAppBar> {
-  @override
   Widget build(BuildContext context) {
-    final List<Widget>? leading = [];
-
     return AppBar(
-      title: Image.asset(
-        "assets/images/logo.png",
-        height: 40,
+      leading: ValueListenableBuilder<ThemeMode>(
+        valueListenable: ThemeNotifier.themeMode,
+        builder: (context, themeMode, child) {
+          return IconButton(
+            icon: Icon(
+              themeMode == ThemeMode.dark
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+              color: themeMode == ThemeMode.dark
+                  ? Colors.white
+                  : Colors.black, // Ensure visibility
+            ),
+            onPressed: ThemeNotifier.toggleTheme,
+          );
+        },
       ),
+      title: Image.asset("assets/images/logo.png", height: 40),
       centerTitle: true,
       actions: [
         IconButton(
-          icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
+          icon: const Icon(Icons.shopping_cart_outlined),
           onPressed: () {},
+          color:
+              Theme.of(context).iconTheme.color, // Use theme-aware icon color
         ),
       ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

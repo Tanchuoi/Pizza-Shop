@@ -16,47 +16,48 @@ class LoginPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Lottie.asset("assets/lotties/login_gif.json", height: 200),
-            const SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                labelText: 'Mật khẩu',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
-              },
-              child: const Text('Đăng nhập'),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Bạn chưa có tài khoản?'),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: const Text('Đăng ký'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Lottie.asset("assets/lotties/login_gif.json", height: 200),
+              const SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Mật khẩu',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/');
+                },
+                child: const Text('Đăng nhập'),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Bạn chưa có tài khoản?'),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text('Đăng ký'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
