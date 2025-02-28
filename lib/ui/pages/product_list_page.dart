@@ -28,7 +28,9 @@ class ProductListPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/cart');
+            },
           ),
         ],
         bottom: PreferredSize(
