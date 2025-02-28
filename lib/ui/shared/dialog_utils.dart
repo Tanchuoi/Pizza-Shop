@@ -5,7 +5,7 @@ Future<bool?> showConfirmDialog(BuildContext context, String message) {
     context: context,
     builder: (ctx) => AlertDialog(
       icon: const Icon(Icons.warning),
-      title: const Text("Are you sure?"),
+      title: const Text("Xác nhận xóa?"),
       content: Text(message),
       actions: <Widget>[
         Row(
@@ -13,14 +13,14 @@ Future<bool?> showConfirmDialog(BuildContext context, String message) {
           children: [
             Expanded(
               child: ActionButton(
-                  actionText: "No",
+                  actionText: "Không",
                   onPressed: () {
                     Navigator.of(ctx).pop(false);
                   }),
             ),
             Expanded(
               child: ActionButton(
-                  actionText: "Yes",
+                  actionText: "Có",
                   onPressed: () {
                     Navigator.of(ctx).pop(true);
                   }),
