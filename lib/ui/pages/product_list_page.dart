@@ -6,10 +6,10 @@ import '../../data/managers/product_manager.dart';
 
 class ProductListPage extends StatelessWidget {
   final List<String> categories = [
-    "MUA 1 TẶNG 1",
     "PIZZA",
     "GHIỀN GÀ",
-    "MUA KÈM"
+    "MÓN KHAI VỊ",
+    "THỨC UỐNG",
   ];
   final List<Product> products = ProductManager.getProducts();
 
@@ -76,7 +76,8 @@ class ProductListPage extends StatelessWidget {
                 ),
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return ProductCard(product: products[index]);
+                  return ProductCard(
+                      product: products[index], showOptionals: true);
                 },
               ),
             ),

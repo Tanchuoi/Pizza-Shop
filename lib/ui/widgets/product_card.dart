@@ -5,8 +5,11 @@ import '../pages/product_detail_page.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final bool showOptionals;
 
-  const ProductCard({Key? key, required this.product}) : super(key: key);
+  const ProductCard(
+      {Key? key, required this.product, this.showOptionals = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,37 +56,13 @@ class ProductCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(height: 8),
-                    Flexible(
-                      // ✅ Fix: Prevents DropdownButton from causing overflow
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: "Vừa",
-                        onChanged: (String? newValue) {},
-                        items: ["Nhỏ", "Vừa", "Lớn"]
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Flexible(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: "Đế Kéo Tay",
-                        onChanged: (String? newValue) {},
-                        items: ["Đế Kéo Tay", "Viền Đồng Tiền"]
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                    if (showOptionals) ...[
+                      _buildDropdown(["Nhỏ", "Vừa", "Lớn"], "Vừa"),
+                      const SizedBox(height: 4),
+                      _buildDropdown(
+                          ["Đế giòn", "Viền Xúc Xích", "Viền Phô Mai"],
+                          "Đế giòn"),
+                    ],
                     Spacer(),
                     FilledButton(
                       onPressed: () {
@@ -106,6 +85,22 @@ class ProductCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDropdown(List<String> options, String defaultValue) {
+    return Flexible(
+      child: DropdownButton<String>(
+        isExpanded: true,
+        value: defaultValue,
+        onChanged: (String? newValue) {},
+        items: options.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
       ),
     );
   }
