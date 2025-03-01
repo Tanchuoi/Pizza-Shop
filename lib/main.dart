@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../themes/app_theme.dart';
 import 'data/managers/cart_manager.dart';
-import 'data/managers/product_manager.dart';
+import 'data/managers/order_manager.dart';
 import 'ui/pages/home_page.dart';
 import 'ui/pages/cart_page.dart';
 import 'ui/pages/product_list_page.dart';
@@ -13,6 +13,7 @@ import 'ui/pages/login_page.dart';
 import 'ui/pages/profile_page.dart';
 import 'ui/pages/register_page.dart';
 import 'ui/shared/theme_notifier.dart';
+import 'ui/pages/order_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,27 +26,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<ThemeMode>(
-      valueListenable: ThemeNotifier.themeMode,
-      builder: (context, themeMode, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Pizza Shop',
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: themeMode,
-          initialRoute: '/login',
-          routes: {
-            '/main': (context) => const MainPage(),
-            '/home': (context) => HomePage(),
-            '/product-list': (context) => ProductListPage(),
-            '/cart': (context) => CartPage(),
-            '/login': (context) => LoginPage(),
-            '/register': (context) => RegisterPage(),
-            '/profile': (context) => ProfilePage(),
-          },
-        );
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartManager()),
+        ChangeNotifierProvider(create: (context) => OrderManager()),
+      ],
+      child: ValueListenableBuilder<ThemeMode>(
+        valueListenable: ThemeNotifier.themeMode,
+        builder: (context, themeMode, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Pizza Shop',
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeMode,
+            initialRoute: '/order',
+            routes: {
+              '/main': (context) => const MainPage(),
+              '/home': (context) => HomePage(),
+              '/product-list': (context) => ProductListPage(),
+              '/cart': (context) => CartPage(),
+              '/login': (context) => LoginPage(),
+              '/register': (context) => RegisterPage(),
+              '/profile': (context) => ProfilePage(),
+              '/order': (BuildContext context) => OrderPage(),
+            },
+          );
+        },
+      ),
     );
   }
 }

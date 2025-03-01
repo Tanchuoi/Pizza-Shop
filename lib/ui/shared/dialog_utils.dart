@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-Future<bool?> showConfirmDialog(BuildContext context, String message) {
+Future<bool?> showConfirmDialog(
+    BuildContext context, String title, String message) {
   return showDialog(
     context: context,
     builder: (ctx) => AlertDialog(
       icon: const Icon(Icons.warning),
-      title: const Text("Xác nhận xóa?"),
+      title: Text(title),
       content: Text(message),
       actions: <Widget>[
         Row(

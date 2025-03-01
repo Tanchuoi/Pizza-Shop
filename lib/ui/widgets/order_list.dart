@@ -30,7 +30,7 @@ class OrderList extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No orders yet',
+              'Chưa có hóa đơn nào',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey[600],
@@ -39,7 +39,7 @@ class OrderList extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your order history will appear here',
+              'Hóa đơn của bạn sẽ xuất hiện ở đây',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[500],

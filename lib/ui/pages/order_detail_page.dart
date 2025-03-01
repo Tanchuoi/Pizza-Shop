@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/order.dart';
+import '../../data/managers/order_manager.dart';
 import 'package:intl/intl.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -298,7 +300,21 @@ class OrderDetailsScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.pop(context, 'cancel');
+                      final orderManager = context.read<OrderManager>();
+                      final success = orderManager.cancelOrder(order.id);
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Hóa đơn #${order.id} đã bị hủy bỏ!')),
+                        );
+                        Navigator.pop(context, 'cancel');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Không thể hủy bỏ hóa đơn')),
+                        );
+                      }
                     },
                     icon: const Icon(Icons.cancel_outlined),
                     label: const Text('Hủy đơn hàng'),
@@ -314,7 +330,21 @@ class OrderDetailsScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.pop(context, 'reorder');
+                      final orderManager = context.read<OrderManager>();
+                      final newOrderId = orderManager.reorder(order.id);
+                      if (newOrderId != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  'Hóa đơn mới đã được tạo: #$newOrderId')),
+                        );
+                        Navigator.pop(context, 'reorder');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Không thể đặt lại hóa đơn')),
+                        );
+                      }
                     },
                     icon: const Icon(Icons.replay_outlined),
                     label: const Text('Đặt lại'),
