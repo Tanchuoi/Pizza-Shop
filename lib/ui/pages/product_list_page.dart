@@ -76,8 +76,7 @@ class ProductListPage extends StatelessWidget {
                 ),
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return ProductCard(
-                      product: products[index], showOptionals: true);
+                  return ProductCard(product: products[index]);
                 },
               ),
             ),

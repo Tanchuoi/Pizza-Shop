@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeMode,
-            initialRoute: '/order',
+            initialRoute: '/login',
             routes: {
               '/main': (context) => const MainPage(),
               '/home': (context) => HomePage(),

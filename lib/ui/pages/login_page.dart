@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import 'register_page.dart';
-
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -22,19 +20,55 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               Lottie.asset("assets/lotties/login_gif.json", height: 200),
-              const SizedBox(height: 20),
+              // Username/Email Input Field
               TextField(
                 decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+
+                  hintText: 'Tên đăng nhập/Email',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue.shade100),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
-                  border: OutlineInputBorder(),
-                ),
+              StatefulBuilder(
+                builder: (context, setState) {
+                  bool obscureText = true;
+                  return StatefulBuilder(
+                    builder: (context, setFieldState) {
+                      return TextField(
+                        obscureText: obscureText,
+                        decoration: InputDecoration(
+      
+                          hintText: 'Mật khẩu',
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setFieldState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.blue.shade100),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(

@@ -20,7 +20,13 @@ class ProfilePage extends StatelessWidget {
             children: [
               _buildListTile('Theo dõi đơn hàng', () {}),
               _buildListTile('Cập nhật thông tin', () {}),
-              _buildListTile('Đăng xuất', () {}),
+              _buildListTile('Đăng xuất', () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/login',
+                  (route) => false,
+                );
+              }),
             ],
           ),
         ),

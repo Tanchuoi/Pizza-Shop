@@ -19,35 +19,150 @@ class RegisterPage extends StatelessWidget {
           children: [
             TextField(
               decoration: InputDecoration(
-                labelText: 'Họ và tên',
-                border: OutlineInputBorder(),
+                hintText: 'Họ và tên',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
+                hintText: 'Tên đăng nhập',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Mật khẩu',
-                border: OutlineInputBorder(),
+                hintText: 'Email',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Nhập lại mật khẩu',
-                border: OutlineInputBorder(),
+                hintText: 'Số điện thoại',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.blue.shade100,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
             const SizedBox(height: 20),
+            //Password field
+            StatefulBuilder(
+              builder: (context, setState) {
+                bool obscureText = true;
+                return StatefulBuilder(
+                  builder: (context, setFieldState) {
+                    return TextField(
+                      obscureText: obscureText,
+                      decoration: InputDecoration(
+                        hintText: 'Mật khẩu',
+                        suffixIcon: IconButton(
+                          icon: Icon(obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setFieldState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade100),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            //Confirm password field
+            const SizedBox(height: 20),
+            StatefulBuilder(
+              builder: (context, setState) {
+                bool obscureText = true;
+                return StatefulBuilder(
+                  builder: (context, setFieldState) {
+                    return TextField(
+                      obscureText: obscureText,
+                      decoration: InputDecoration(
+                        hintText: 'Mật khẩu',
+                        suffixIcon: IconButton(
+                          icon: Icon(obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setFieldState(() {
+                              obscureText = !obscureText;
+                            });
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue.shade100),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(height: 40),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushNamed(context, '/login');
               },
               child: const Text('Đăng ký'),
             ),
