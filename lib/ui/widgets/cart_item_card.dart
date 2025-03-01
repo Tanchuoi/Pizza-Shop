@@ -32,8 +32,8 @@ class CartItemCard extends StatelessWidget {
         ),
       ),
       confirmDismiss: (direction) async {
-        return showConfirmDialog(
-            context, 'Bạn có chắc chắn muốn xóa sản phẩm này?');
+        return showConfirmDialog(context, 'Xác nhận xóa sản phẩm',
+            'Bạn có chắc chắn muốn xóa sản phẩm này?');
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),

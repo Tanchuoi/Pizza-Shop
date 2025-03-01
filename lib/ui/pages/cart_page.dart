@@ -170,6 +170,7 @@ class CartPage extends StatelessWidget {
                       backgroundColor: Colors.green,
                     ),
                   );
+                  cartManager.clearCart();
                   // Navigate to checkout screen
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen()));
                 });
