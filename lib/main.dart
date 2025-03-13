@@ -14,6 +14,7 @@ import 'ui/pages/profile_page.dart';
 import 'ui/pages/register_page.dart';
 import 'ui/shared/theme_notifier.dart';
 import 'ui/pages/order_page.dart';
+import 'ui/pages/update_profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
               '/register': (context) => RegisterPage(),
               '/profile': (context) => ProfilePage(),
               '/order': (BuildContext context) => OrderPage(),
+              '/update-profile': (context) => UpdateProfilePage(),
             },
           );
         },
