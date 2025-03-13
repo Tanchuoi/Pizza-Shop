@@ -1,8 +1,46 @@
+import 'package:ct312h_project/data/managers/user_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _obscureText = true;
+  bool _isLoading = false;
+
+  Future<void> _handleLogin(BuildContext context) async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vui lòng nhập email và mật khẩu')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await context.read<UserManager>().login(email, password);
+      Navigator.pushReplacementNamed(context, '/main');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đăng nhập thất bại: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +58,13 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               Lottie.asset("assets/lotties/login_gif.json", height: 200),
-              // Username/Email Input Field
-              TextField(
-                decoration: InputDecoration(
 
+              // Email
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
                   hintText: 'Tên đăng nhập/Email',
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: const Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -36,51 +75,47 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              StatefulBuilder(
-                builder: (context, setState) {
-                  bool obscureText = true;
-                  return StatefulBuilder(
-                    builder: (context, setFieldState) {
-                      return TextField(
-                        obscureText: obscureText,
-                        decoration: InputDecoration(
-      
-                          hintText: 'Mật khẩu',
-                          prefixIcon: Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              setFieldState(() {
-                                obscureText = !obscureText;
-                              });
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue.shade100),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      );
+
+              // Password
+              TextField(
+                controller: _passwordController,
+                obscureText: _obscureText,
+                decoration: InputDecoration(
+                  hintText: 'Mật khẩu',
+                  prefixIcon: const Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() => _obscureText = !_obscureText);
                     },
-                  );
-                },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue.shade100),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
+
+              // Login Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/main');
-                },
-                child: const Text('Đăng nhập'),
+                onPressed: _isLoading ? null : () => _handleLogin(context),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Text('Đăng nhập'),
               ),
               const SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

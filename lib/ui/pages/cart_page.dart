@@ -1,10 +1,23 @@
+import 'package:ct312h_project/data/models/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/managers/cart_manager.dart';
 import '../widgets/cart_item_card.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  late Future<void> _fetchCartItems;
+  @override
+  void initState() {
+    super.initState();
+    _fetchCartItems = context.read<CartManager>().loadCart();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,36 +30,48 @@ class CartPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
       ),
-      body: Consumer<CartManager>(
-        builder: (context, cartManager, child) {
-          if (cartManager.isEmpty) {
-            return _buildEmptyCart();
-          }
+      body: FutureBuilder(
+          future: _fetchCartItems,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Đã xảy ra lỗi: ${snapshot.error}'),
+              );
+            } else {
+              return Consumer<CartManager>(
+                builder: (context, cartManager, child) {
+                  if (cartManager.isEmpty) {
+                    return _buildEmptyCart();
+                  }
 
-          return Column(
-            children: [
-              // List of cart items
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: cartManager.items.length,
-                  itemBuilder: (context, index) {
-                    final item = cartManager.items[index];
-                    return CartItemCard(
-                      item: item,
-                      onUpdateQuantity: cartManager.updateQuantity,
-                      onRemoveItem: cartManager.removeItem,
-                    );
-                  },
-                ),
-              ),
+                  return Column(
+                    children: [
+                      // List of cart items
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: cartManager.items.length,
+                          itemBuilder: (context, index) {
+                            final item = cartManager.items[index];
+                            return CartItemCard(
+                              item: item,
+                              onUpdateQuantity: cartManager.updateQuantity,
+                              onRemoveItem: cartManager.removeItem,
+                            );
+                          },
+                        ),
+                      ),
 
-              // Order summary and checkout button
-              _buildOrderSummary(context, cartManager),
-            ],
-          );
-        },
-      ),
+                      // Order summary and checkout button
+                      _buildOrderSummary(context, cartManager),
+                    ],
+                  );
+                },
+              );
+            }
+          }),
     );
   }
 

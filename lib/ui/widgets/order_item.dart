@@ -1,6 +1,7 @@
 import 'package:ct312h_project/ui/shared/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/order.dart';
+import '../../data/models/cart_item.dart';
 import 'package:intl/intl.dart';
 
 class OrderItemWidget extends StatefulWidget {
@@ -212,7 +213,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
     );
   }
 
-  Widget _buildOrderItemRow(OrderItem item) {
+  Widget _buildOrderItemRow(CartItem item) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(

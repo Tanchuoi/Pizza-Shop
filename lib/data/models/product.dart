@@ -27,4 +27,23 @@ class Product {
       imageUrl: imageUrl ?? this.imageUrl,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'price': price,
+      'category': category,
+    };
+  }
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      name: json['name'],
+      description: json['description'],
+      price: json['price'],
+      category: json['category'],
+      imageUrl: json['imageUrl'],
+    );
+  }
 }

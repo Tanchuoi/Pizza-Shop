@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../models/cart_item.dart';
+import '../services/cart_service.dart';
 
 class CartManager extends ChangeNotifier {
-  List<CartItem> _items = [
-    CartItem(
-      id: '1',
-      name: "Pizza Tứ Vị Xuân",
-      description: "Mực, tôm, thanh cua, thịt ba chỉ xô...",
-      price: 249000,
-      quantity: 10,
-      imageUrl: "assets/images/pizza.png", // Replace with actual image URL
-    ),
-  ];
+  final CartService cartService = CartService();
+  List<CartItem> _items = [];
 
   int get productCount {
     return _items.length;
@@ -43,24 +36,43 @@ class CartManager extends ChangeNotifier {
   // Calculate total price
   double get totalPrice => subtotal + deliveryFee;
 
+  Future<void> loadCart() async {
+    try {
+      _items = await cartService.fetchCartItems();
+      notifyListeners();
+    } catch (e) {
+      print('Error loading cart: $e');
+    }
+  }
+
   // Update quantity
-  void updateQuantity(String id, int newQuantity) {
+  Future<void> updateQuantity(CartItem item, int newQuantity) async {
     if (newQuantity <= 0) {
-      removeItem(id);
+      await removeItem(item);
       return;
     }
 
-    final index = _items.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      _items[index].quantity = newQuantity;
-      notifyListeners();
+    try {
+      await cartService.updateCartItem(item, newQuantity);
+      final index = _items.indexWhere((prod) => prod.id == item.id);
+      if (index != -1) {
+        _items[index].quantity = newQuantity;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Error updating quantity: $e');
     }
   }
 
   // Remove item
-  void removeItem(String id) {
-    _items.removeWhere((item) => item.id == id);
-    notifyListeners();
+  Future<void> removeItem(CartItem item) async {
+    try {
+      await cartService.deleteCartItem(item);
+      _items.removeWhere((prod) => prod.id == item.id);
+      notifyListeners();
+    } catch (e) {
+      print('Error removing item: $e');
+    }
   }
 
   // Clear cart
@@ -70,30 +82,24 @@ class CartManager extends ChangeNotifier {
   }
 
   // Add item to cart
-  void addItem(CartItem item) {
+  Future<void> addItem(CartItem item) async {
     final existingIndex = _items.indexWhere((i) => i.id == item.id);
 
     if (existingIndex >= 0) {
       _items[existingIndex].quantity += item.quantity;
+      await updateQuantity(item, _items[existingIndex].quantity);
     } else {
-      _items.add(item);
+      await cartService.addCartItem(item);
+      await loadCart();
     }
-
-    notifyListeners();
   }
 
   // Save cart to database (mock implementation)
   Future<void> saveCart() async {
-    // In a real app, this would save to a local database or remote server
-    print('Saving cart with ${_items.length} items');
-    // await database.saveCart(_items);
-  }
-
-  // Load cart from database (mock implementation)
-  Future<void> loadCart() async {
-    // In a real app, this would load from a local database or remote server
-    print('Loading cart from database');
-    // _items = await database.getCartItems();
-    notifyListeners();
+    try {
+      await cartService.saveCart(_items);
+    } catch (e) {
+      print('Error saving cart: $e');
+    }
   }
 }
