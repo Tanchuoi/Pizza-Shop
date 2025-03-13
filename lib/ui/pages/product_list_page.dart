@@ -4,14 +4,36 @@ import '../../data/models/product.dart';
 import '../widgets/product_card.dart';
 import '../../data/managers/product_manager.dart';
 
-class ProductListPage extends StatelessWidget {
+class ProductListPage extends StatefulWidget {
+  @override
+  _ProductListPageState createState() => _ProductListPageState();
+}
+
+class _ProductListPageState extends State<ProductListPage> {
   final List<String> categories = [
     "PIZZA",
     "GHIỀN GÀ",
     "MÓN KHAI VỊ",
     "THỨC UỐNG",
   ];
-  final List<Product> products = ProductManager.getProducts();
+
+  String selectedCategory = "PIZZA"; // Default selected category
+  List<Product> products = []; // Will be populated in initState
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize products with the selected category
+    products = ProductManager.getProductsByCategory(selectedCategory);
+  }
+
+  // Method to update products when category changes
+  void _updateProductsByCategory(String category) {
+    setState(() {
+      selectedCategory = category;
+      products = ProductManager.getProductsByCategory(category);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,55 +54,36 @@ class ProductListPage extends StatelessWidget {
             },
           ),
         ],
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: categories
-                  .map((category) => Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: ChoiceChip(
-                          label: Text(category),
-                          selected: category == "PIZZA",
-                          selectedColor: Colors.red,
-                          backgroundColor: Colors.white,
-                          labelStyle: TextStyle(
-                            color: category == "PIZZA"
-                                ? Colors.white
-                                : Colors.black,
-                          ),
-                          onSelected: (selected) {},
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
-        ),
+        bottom: _productCategoryNavbar(),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.all(10),
-              child: GridView.builder(
-                shrinkWrap: true, // Prevents infinite height error
-                physics:
-                    NeverScrollableScrollPhysics(), // Disables inner scrolling
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.5,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(product: products[index]);
-                },
-              ),
+              child: products.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Không có sản phẩm nào trong danh mục này"),
+                      ),
+                    )
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(product: products[index]);
+                      },
+                    ),
             ),
-            SizedBox(height: 10), // Space before bottom bar
+            SizedBox(height: 10),
           ],
         ),
       ),
@@ -107,6 +110,43 @@ class ProductListPage extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _productCategoryNavbar() {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(50),
+      child: Container(
+        height: 50,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: categories
+                .map((category) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      child: ChoiceChip(
+                        label: Text(
+                          category,
+                          style: TextStyle(
+                            color: selectedCategory == category
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                        selected: selectedCategory == category,
+                        selectedColor: Colors.red,
+                        backgroundColor: Colors.white,
+                        onSelected: (selected) {
+                          if (selected) {
+                            _updateProductsByCategory(category);
+                          }
+                        },
+                      ),
+                    ))
+                .toList(),
           ),
         ),
       ),

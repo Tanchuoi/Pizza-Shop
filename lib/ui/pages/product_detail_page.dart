@@ -14,6 +14,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   String selectedSize = "Vừa";
   String selectedCrust = "Đế Kéo Tay";
   int quantity = 1;
+  int totalPrice = 0;
+
+  int calculateTotalPrice() {
+    int price = widget.product.price;
+    if (selectedSize == "Vừa") {
+      price += 50000;
+    } else if (selectedSize == "Lớn") {
+      price += 10000;
+    }
+    return price * quantity;
+  }
 
   void incrementQuantity() {
     setState(() {
@@ -150,7 +161,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Text(
-                    "Thêm vào giỏ hàng",
+                    "Thêm vào giỏ hàng  ${calculateTotalPrice()}đ",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),

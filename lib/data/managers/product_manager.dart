@@ -1,62 +1,58 @@
 import '../models/product.dart';
 
 class ProductManager {
+  // Original method to get all products
   static List<Product> getProducts() {
     return [
       Product(
-        name: "Pizza Tứ Vị Xuân",
-        description:
-            "Mực, tôm, thanh cua, thịt ba chỉ xô asdasdasdasdasdasdasdsda",
-        price: 249000,
-        imageUrl: "assets/images/pizza.png", // Replace with actual image URL
+        name: 'Pizza Hải Sản',
+        description: 'Pizza với hải sản tươi ngon',
+        price: 159000,
+        category: 'PIZZA',
+        imageUrl: 'assets/images/pizza.png',
       ),
       Product(
-        name: "Pizza Tứ Vị Xuân (Có Viền)",
-        description:
-            "Mực, tôm, thanh cua, thịt ba chỉ xô asdasdasdasdasdasdasdsda",
-        price: 318000,
-        imageUrl: "assets/images/pizza.png",
+        name: 'Pizza Thịt Xông Khói',
+        description: 'Pizza với thịt xông khói thơm ngon',
+        price: 129000,
+        category: 'PIZZA',
+        imageUrl: 'assets/images/pizza.png',
       ),
       Product(
-        name: "Pizza Hải Sản",
-        description:
-            "Tôm, mực, thanh cua, sốt đặc biệt asdasdasdasdasdasdasdsda",
-        price: 289000,
-        imageUrl: "assets/images/pizza.png",
+        name: 'Gà Rán',
+        description: 'Gà rán giòn rụm',
+        price: 79000,
+        category: 'GHIỀN GÀ',
+        imageUrl: 'assets/images/pizza.png',
       ),
       Product(
-        name: "Pizza Gà Cay",
-        description: "Gà cay, sốt tiêu đen, phô mai asdasdasdasdasdasdasdsda",
-        price: 259000,
-        imageUrl: "assets/images/pizza.png",
+        name: 'Gà Nướng',
+        description: 'Gà nướng thơm ngon',
+        price: 89000,
+        category: 'GHIỀN GÀ',
+        imageUrl: 'assets/images/pizza.png',
       ),
       Product(
-        name: "Pizza Tứ Vị Xuân",
-        description:
-            "Mực, tôm, thanh cua, thịt ba chỉ xô asdasdasdasdasdasdasdsda",
-        price: 249000,
-        imageUrl: "assets/images/pizza.png", // Replace with actual image URL
+        name: 'Khoai Tây Chiên',
+        description: 'Khoai tây chiên giòn',
+        price: 39000,
+        category: 'MÓN KHAI VỊ',
+        imageUrl: 'assets/images/pizza.png',
       ),
       Product(
-        name: "Pizza Tứ Vị Xuân (Có Viền)",
-        description:
-            "Mực, tôm, thanh cua, thịt ba chỉ xô asdasdasdasdasdasdasdsda",
-        price: 318000,
-        imageUrl: "assets/images/pizza.png",
-      ),
-      Product(
-        name: "Pizza Hải Sản",
-        description:
-            "Tôm, mực, thanh cua, sốt đặc biệt asdasdasdasdasdasdasdsda",
-        price: 289000,
-        imageUrl: "assets/images/pizza.png",
-      ),
-      Product(
-        name: "Pizza Gà Cay",
-        description: "Gà cay, sốt tiêu đen, phô mai asdasdasdasdasdasdasdsda",
-        price: 259000,
-        imageUrl: "assets/images/pizza.png",
+        name: 'Coca Cola',
+        description: 'Nước ngọt có gas',
+        price: 15000,
+        category: 'THỨC UỐNG',
+        imageUrl: 'assets/images/pizza.png',
       ),
     ];
+  }
+
+  // New method to filter products by category
+  static List<Product> getProductsByCategory(String category) {
+    return getProducts()
+        .where((product) => product.category == category)
+        .toList();
   }
 }
