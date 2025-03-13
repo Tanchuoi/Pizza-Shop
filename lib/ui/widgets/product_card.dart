@@ -67,6 +67,14 @@ class ProductCard extends StatelessWidget {
                       ),
                       Spacer(),
                       FilledButton(
+                        //change border radius
+                        style: ButtonStyle(
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
                         onPressed: () {
                           print("da them san pham");
                         },
