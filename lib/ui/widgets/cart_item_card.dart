@@ -1,11 +1,13 @@
 import 'package:ct312h_project/ui/shared/dialog_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../data/models/cart_item.dart';
+import '../../data/services/cart_service.dart';
 
 class CartItemCard extends StatelessWidget {
   final CartItem item;
-  final Function(String, int) onUpdateQuantity;
-  final Function(String) onRemoveItem;
+  final Function(CartItem, int) onUpdateQuantity;
+  final Function(CartItem) onRemoveItem;
 
   const CartItemCard({
     Key? key,
@@ -20,7 +22,7 @@ class CartItemCard extends StatelessWidget {
       key: Key(item.id.toString()),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        onRemoveItem(item.id);
+        onRemoveItem(item);
       },
       background: Container(
         alignment: Alignment.centerRight,
@@ -49,20 +51,18 @@ class CartItemCard extends StatelessWidget {
               // Pizza image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  item.imageUrl,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.local_pizza, color: Colors.grey),
-                    );
-                  },
-                ),
+                child: (item.imageUrl != null && item.imageUrl!.isNotEmpty)
+                    ? Image.network(
+                        item.imageUrl!,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.image_not_supported,
+                              size: 100);
+                        },
+                      )
+                    : const Icon(Icons.image_not_supported, size: 100),
               ),
               const SizedBox(width: 16),
 
@@ -98,7 +98,7 @@ class CartItemCard extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.remove, size: 16),
                             onPressed: () =>
-                                onUpdateQuantity(item.id, item.quantity - 1),
+                                onUpdateQuantity(item, item.quantity - 1),
                             constraints: const BoxConstraints(
                               minWidth: 36,
                               minHeight: 36,
@@ -112,7 +112,7 @@ class CartItemCard extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.add, size: 16),
                             onPressed: () =>
-                                onUpdateQuantity(item.id, item.quantity + 1),
+                                onUpdateQuantity(item, item.quantity + 1),
                             constraints: const BoxConstraints(
                               minWidth: 36,
                               minHeight: 36,

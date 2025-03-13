@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/order.dart';
+import '../models/cart_item.dart';
 
 class OrderManager extends ChangeNotifier {
   // Private list of orders
@@ -9,14 +10,14 @@ class OrderManager extends ChangeNotifier {
       id: '1001',
       date: DateTime.now().subtract(const Duration(days: 2)),
       items: [
-        OrderItem(
+        CartItem(
           id: '101',
           name: "Pizza Tứ Vị Xuân (Có Viền)",
           price: 318000,
           quantity: 2,
           imageUrl: "assets/images/pizza.png",
         ),
-        OrderItem(
+        CartItem(
           id: '102',
           name: "Pizza Hải Sản",
           quantity: 3,
@@ -32,14 +33,14 @@ class OrderManager extends ChangeNotifier {
       id: '1001',
       date: DateTime.now().subtract(const Duration(hours: 5)),
       items: [
-        OrderItem(
+        CartItem(
           id: '101',
           name: "Pizza Tứ Vị Xuân (Có Viền)",
           price: 318000,
           quantity: 2,
           imageUrl: "assets/images/pizza.png",
         ),
-        OrderItem(
+        CartItem(
           id: '102',
           name: "Pizza Hải Sản",
           quantity: 3,

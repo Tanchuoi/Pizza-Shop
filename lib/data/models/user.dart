@@ -1,60 +1,65 @@
 class User {
-  final String id;
-  final String name;
+  final String? id;
+  final String fullName;
+  final String username;
   final String email;
-  final String password;
-  final String phoneNumber;
-  final String address;
-  final String birthDate;
+  final String? phoneNumber;
+  final String? address;
+  final String? birthDate;
+  final String? avatar;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.phoneNumber,
-    required this.address,
-    required this.birthDate,
-  });
+  User(
+      {this.id,
+      required this.username,
+      required this.fullName,
+      required this.email,
+      this.phoneNumber,
+      this.address,
+      this.birthDate,
+      this.avatar});
 
   User copyWith({
     String? id,
-    String? name,
+    String? fullName,
+    String? username,
     String? email,
-    String? password,
     String? phoneNumber,
     String? address,
     String? birthDate,
+    String? avatar,
   }) {
     return User(
       id: id ?? this.id,
-      name: name ?? this.name,
+      fullName: fullName ?? this.fullName,
+      username: username ?? this.username,
       email: email ?? this.email,
-      password: password ?? this.password,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       address: address ?? this.address,
       birthDate: birthDate ?? this.birthDate,
+      avatar: avatar ?? this.avatar,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    final data = {
       'id': id,
-      'name': name,
+      'username': username,
+      'fullName': fullName,
       'email': email,
-      'password': password,
       'phoneNumber': phoneNumber,
       'address': address,
       'birthDate': birthDate,
     };
+
+    return data;
   }
 
   factory User.fromJson(Map<String, dynamic> map) {
     return User(
       id: map['id'],
-      name: map['name'],
+      fullName: map['fullName'] ?? '',
+      username: map['username'],
       email: map['email'],
-      password: map['password'],
       phoneNumber: map['phoneNumber'],
       address: map['address'],
       birthDate: map['birthDate'],
