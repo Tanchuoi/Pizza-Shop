@@ -9,6 +9,7 @@ import '../themes/app_theme.dart';
 import 'data/managers/cart_manager.dart';
 import 'data/managers/order_manager.dart';
 import 'data/managers/user_manager.dart';
+import 'data/managers/product_manager.dart';
 import 'ui/pages/home_page.dart';
 import 'ui/pages/cart_page.dart';
 import 'ui/pages/product_list_page.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserManager()),
         ChangeNotifierProvider(create: (context) => CartManager()),
         ChangeNotifierProvider(create: (context) => OrderManager()),
+        ChangeNotifierProvider(create: (context) => ProductManager()),
       ],
       child: ValueListenableBuilder<ThemeMode>(
         valueListenable: ThemeNotifier.themeMode,

@@ -40,8 +40,8 @@ class ProfilePage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Background color
         borderRadius: BorderRadius.circular(10), // Rounded corners
+        border: Border.all(color: Colors.grey.shade300), // Add border
       ),
       child: ListTile(
         title: Text(title, style: const TextStyle(fontSize: 16)),

@@ -1,118 +1,86 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../data/models/product.dart';
-import '../widgets/product_card.dart';
 import '../../data/managers/product_manager.dart';
+import '../widgets/product_card.dart';
 
 class ProductListPage extends StatefulWidget {
+  const ProductListPage({super.key});
+
   @override
   _ProductListPageState createState() => _ProductListPageState();
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  final List<String> categories = [
-    "PIZZA",
-    "GHIỀN GÀ",
-    "MÓN KHAI VỊ",
-    "THỨC UỐNG",
+  final List<Map<String, String>> categories = [
+    {"display": "PIZZA", "value": "pizza"},
+    {"display": "GHIỀN GÀ", "value": "chicken"},
+    {"display": "MÓN KHAI VỊ", "value": "appetizer"},
+    {"display": "THỨC UỐNG", "value": "drink"},
   ];
 
-  String selectedCategory = "PIZZA"; // Default selected category
-  List<Product> products = []; // Will be populated in initState
+  String selectedCategory = "pizza"; // Default category
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    // Initialize products with the selected category
-    products = ProductManager.getProductsByCategory(selectedCategory);
+    _updateProductsByCategory(selectedCategory);
   }
 
-  // Method to update products when category changes
-  void _updateProductsByCategory(String category) {
-    setState(() {
-      selectedCategory = category;
-      products = ProductManager.getProductsByCategory(category);
-    });
+  Future<void> _updateProductsByCategory(String category) async {
+    setState(() => isLoading = true);
+    try {
+      await Provider.of<ProductManager>(context, listen: false)
+          .getProductsByCategory(category);
+      setState(() {
+        selectedCategory = category;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() => isLoading = false);
+      print("Error fetching products: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final products = Provider.of<ProductManager>(context).products;
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        elevation: 0,
-        title: Image.asset(
-          "assets/images/logo.png",
-          height: 40,
-        ),
+        title: Image.asset("assets/images/logo.png", height: 40),
         centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
-            onPressed: () {
-              Navigator.pushNamed(context, '/cart');
-            },
+            onPressed: () => Navigator.pushNamed(context, '/cart'),
           ),
         ],
         bottom: _productCategoryNavbar(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: products.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text("Không có sản phẩm nào trong danh mục này"),
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.5,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        return ProductCard(product: products[index]);
-                      },
-                    ),
-            ),
-            SizedBox(height: 10),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: FilledButton(
-            style: FilledButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () {
-              print("da them san pham");
-            },
-            child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(child: Text("Thanh toán: 4 món")),
-                  Text("123,966,667đ")
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : products.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text("Không có sản phẩm nào trong danh mục này"),
+                  ),
+                )
+              : GridView.builder(
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.5,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    return ProductCard(product: products[index]);
+                  },
+                ),
     );
   }
 
@@ -125,27 +93,29 @@ class _ProductListPageState extends State<ProductListPage> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: categories
-                .map((category) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      child: ChoiceChip(
-                        label: Text(
-                          category,
-                          style: TextStyle(
-                            color: selectedCategory == category
-                                ? Colors.white
-                                : Colors.black,
-                          ),
+                .map(
+                  (category) => Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: ChoiceChip(
+                      label: Text(
+                        category["display"]!,
+                        style: TextStyle(
+                          color: selectedCategory == category["value"]
+                              ? Colors.white
+                              : Colors.black,
                         ),
-                        selected: selectedCategory == category,
-                        selectedColor: Colors.red,
-                        backgroundColor: Colors.white,
-                        onSelected: (selected) {
-                          if (selected) {
-                            _updateProductsByCategory(category);
-                          }
-                        },
                       ),
-                    ))
+                      selected: selectedCategory == category["value"],
+                      selectedColor: Colors.red,
+                      backgroundColor: Colors.white,
+                      onSelected: (selected) {
+                        if (selected) {
+                          _updateProductsByCategory(category["value"]!);
+                        }
+                      },
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ),

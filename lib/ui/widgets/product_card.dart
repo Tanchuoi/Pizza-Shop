@@ -13,6 +13,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Product data: ${product.toJson()}");
+    print("Image URL: ${product.featuredImage}");
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -23,7 +26,7 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: SizedBox(
-        height: 320,
+        height: 350, // Adjust height to prevent overflow
         child: Card(
           elevation: 3,
           shape:
@@ -31,152 +34,84 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // todo: Use hero animation for image
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                child: Image.asset(
-                  'assets/images/pizza.png',
-                  height: 120, // Fixed height for the image
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Expanded(
-                // ✅ Fix: Ensures Column fits within available space
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(product.name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(height: 4),
-                      Text(
-                        product.description,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      SizedBox(height: 8),
-                      Flexible(
-                        // ✅ Fix: Prevents DropdownButton from causing overflow
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          value: "Vừa",
-                          onChanged: (String? newValue) {},
-                          items: ["Nhỏ", "Vừa", "Lớn"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Flexible(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          value: "Đế Kéo Tay",
-                          onChanged: (String? newValue) {},
-                          items: ["Đế Kéo Tay", "Viền Đồng Tiền"]
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Spacer(),
-                      FilledButton(
-                        onPressed: () async {
-                          final cartItem = CartItem(
-                            id: DateTime.now()
-                                .millisecondsSinceEpoch
-                                .toString(), // temp ID
-                            name: product.name,
-                            quantity: 1,
-                            imageUrl: product.imageUrl,
-                            price: product.price.toDouble(),
+                child: product.featuredImage != null
+                    ? Image.network(
+                        product.featuredImage!,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          print("Error loading image: $error");
+                          return Image.asset(
+                            'assets/images/pizza.png', // Fallback image
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
                           );
-                          await context.read<CartManager>().addItem(cartItem);
+                        },
+                      )
+                    : Image.asset(
+                        'assets/images/pizza.png', // Default image when URL is null
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(product.name,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
+                    Text(
+                      product.description,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(height: 8),
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Đã thêm vào giỏ hàng'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(child: Text("Thêm")),
-                              Text("${product.price}đ")
-                            ],
+                    // **Dropdowns for Pizza Size and Crust**
+                    Text("Chọn cỡ bánh"),
+                    _buildDropdownButton(["Nhỏ", "Vừa", "Lớn"]),
+
+                    SizedBox(height: 8),
+                    // **Button to Add to Cart**
+                    FilledButton(
+                      onPressed: () async {
+                        final cartItem = CartItem(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          name: product.name,
+                          quantity: 1,
+                          imageUrl: product.featuredImage ??
+                              'assets/images/pizza.png',
+                          price: product.price.toDouble(),
+                        );
+                        await context.read<CartManager>().addItem(cartItem);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Đã thêm vào giỏ hàng'),
+                            backgroundColor: Colors.green,
                           ),
+                        );
+                      },
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Thêm"),
+                            Text("${product.price}đ"),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(product.name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(height: 4),
-                      Text(
-                        product.description,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      SizedBox(height: 8),
-                      Text("Chọn cỡ bánh"),
-                      Container(
-                        height: 35, // Fixed height for the dropdown
-                        child: _buildDropdownButton(),
-                      ),
-                      SizedBox(height: 8),
-                      Text("Chọn đế bánh"),
-                      Container(
-                        height: 45, // Fixed height for the dropdown
-                        child: _buildDropdownButton(),
-                      ),
-                      Spacer(),
-                      FilledButton(
-                        //change border radius
-                        style: ButtonStyle(
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          print("da them san pham");
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(child: Text("Thêm")),
-                              Text("${product.price}đ")
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -186,25 +121,20 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdownButton() {
+  Widget _buildDropdownButton(List<String> options) {
     return DropdownButtonFormField<String>(
       isExpanded: true,
-      value: "Vừa",
-      // Removed decoration to reduce height
+      value: options.first, // Default selection
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        isDense: true, // Makes the dropdown more compact
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        isDense: true,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onChanged: (String? newValue) {},
-      items:
-          ["Nhỏ", "Vừa", "Lớn"].map<DropdownMenuItem<String>>((String value) {
+      items: options.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child:
-              Text(value, style: TextStyle(fontSize: 14)), // Smaller font size
+          child: Text(value, style: TextStyle(fontSize: 14)),
         );
       }).toList(),
     );

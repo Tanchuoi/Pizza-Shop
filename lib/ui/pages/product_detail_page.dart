@@ -16,8 +16,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   int quantity = 1;
   int totalPrice = 0;
 
-  int calculateTotalPrice() {
-    int price = widget.product.price;
+  double calculateTotalPrice() {
+    double price = widget.product.price;
     if (selectedSize == "Vừa") {
       price += 50000;
     } else if (selectedSize == "Lớn") {
@@ -55,8 +55,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       body: Column(
         children: [
           // Product Image with Hero Animation
-          Image.asset(
-            'assets/images/pizza.png',
+          Image.network(
+            widget.product.featuredImage!,
             height: 200,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -95,27 +95,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       );
                     }).toList(),
                   ),
-
-                  // Dropdown for Crust Type
-                  Text("Chọn loại đế", style: TextStyle(fontSize: 16)),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedCrust,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedCrust = newValue!;
-                      });
-                    },
-                    items: ["Đế Kéo Tay", "Viền Đồng Tiền"]
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-
-                  SizedBox(height: 16),
                 ],
               ),
             ),

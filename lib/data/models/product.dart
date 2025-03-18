@@ -1,49 +1,42 @@
 class Product {
+  final String id;
   final String name;
   final String description;
-  final int price;
+  final double price;
+  final String? featuredImage;
   final String category;
-  final String imageUrl;
 
   Product({
+    required this.id,
     required this.name,
     required this.description,
     required this.price,
+    required this.featuredImage,
     required this.category,
-    required this.imageUrl,
   });
 
-  Product copyWith({
-    String? name,
-    String? description,
-    int? price,
-    String? imageUrl,
-  }) {
+  factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      name: name ?? this.name,
-      description: description ?? this.description,
-      price: price ?? this.price,
-      category: category,
-      imageUrl: imageUrl ?? this.imageUrl,
+      id: json['id'] ?? '', // Ensure id is always a string
+      name: json['name'] ?? 'Unknown Product',
+      description: json['description'] ?? 'No description available',
+      price: (json['price'] ?? 0).toDouble(), // Ensure it's a double
+      featuredImage: (json['featuredImage'] != null &&
+              json['featuredImage'].isNotEmpty)
+          ? "http://10.0.2.2:8090/api/files/${json['collectionId']}/${json['id']}/${json['featuredImage']}"
+          : null, // ✅ If missing, set to null
+      category: json['category'] ?? 'uncategorized',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'description': description,
       'price': price,
+      'featuredImage': featuredImage,
       'category': category,
     };
-  }
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      category: json['category'],
-      imageUrl: json['imageUrl'],
-    );
   }
 }
