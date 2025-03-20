@@ -18,7 +18,9 @@ class ProfilePage extends StatelessWidget {
         Expanded(
           child: ListView(
             children: [
-              _buildListTile('Theo dõi đơn hàng', () {}),
+              _buildListTile('Theo dõi đơn hàng', () {
+                Navigator.pushNamed(context, '/order');
+              }),
               _buildListTile('Cập nhật thông tin', () {
                 Navigator.pushNamed(context, '/update-profile');
               }),

@@ -71,9 +71,9 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        widget.order.status == "delivered"
+                        widget.order.status == "Delivered"
                             ? 'Đã giao'
-                            : widget.order.status == "canceled"
+                            : widget.order.status == "Canceled"
                                 ? 'Đã hủy'
                                 : 'Đang giao hàng',
                         style: const TextStyle(
@@ -118,8 +118,8 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                             horizontal: 12, vertical: 8),
                       ),
                     ),
-                    if (widget.order.status == "delivered" ||
-                        widget.order.status == "canceled")
+                    if (widget.order.status == "Delivered" ||
+                        widget.order.status == "Canceled")
                       ElevatedButton.icon(
                         onPressed: () => widget.onReorder(widget.order.id),
                         icon: const Icon(Icons.replay_outlined, size: 16),
@@ -129,7 +129,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                               horizontal: 12, vertical: 8),
                         ),
                       ),
-                    if (widget.order.status == "pending")
+                    if (widget.order.status == "Pending")
                       TextButton.icon(
                         onPressed: () async {
                           bool? confirm = await showConfirmDialog(
@@ -221,20 +221,19 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
           // Item image
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Image.asset(
-              item.imageUrl,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.local_pizza, color: Colors.grey),
-                );
-              },
-            ),
+            child: item.featuredImage != null && item.featuredImage!.isNotEmpty
+                ? Image.network(
+                    item.featuredImage!,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    width: 50,
+                    height: 50,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.local_pizza, color: Colors.grey),
+                  ),
           ),
           const SizedBox(width: 12),
 

@@ -52,9 +52,9 @@ class OrderDetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              order.status == 'delivered'
+                              order.status == 'Delivered'
                                   ? 'Đã giao hàng'
-                                  : order.status == 'canceled'
+                                  : order.status == 'Canceled'
                                       ? 'Đã hủy'
                                       : 'Đang giao hàng',
                               style: const TextStyle(
@@ -175,21 +175,21 @@ class OrderDetailsScreen extends StatelessWidget {
                               // Item image
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  item.imageUrl,
-                                  width: 60,
-                                  height: 60,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 60,
-                                      height: 60,
-                                      color: Colors.grey[300],
-                                      child: const Icon(Icons.local_pizza,
-                                          color: Colors.grey),
-                                    );
-                                  },
-                                ),
+                                child: item.featuredImage != null &&
+                                        item.featuredImage!.isNotEmpty
+                                    ? Image.network(
+                                        item.featuredImage!,
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.grey[300],
+                                        child: const Icon(Icons.local_pizza,
+                                            color: Colors.grey),
+                                      ),
                               ),
                               const SizedBox(width: 12),
 
@@ -299,9 +299,9 @@ class OrderDetailsScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
                       final orderManager = context.read<OrderManager>();
-                      final success = orderManager.cancelOrder(order.id);
+                      final success = await orderManager.cancelOrder(order.id);
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -329,9 +329,9 @@ class OrderDetailsScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
                       final orderManager = context.read<OrderManager>();
-                      final newOrderId = orderManager.reorder(order.id);
+                      final newOrderId = await orderManager.reorder(order.id);
                       if (newOrderId != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -368,8 +368,6 @@ class OrderDetailsScreen extends StatelessWidget {
         return Colors.green;
       case 'canceled':
         return Colors.red;
-      case 'processing':
-        return Colors.blue;
       default:
         return Colors.grey;
     }

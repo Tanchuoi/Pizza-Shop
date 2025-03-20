@@ -13,9 +13,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Product data: ${product.toJson()}");
-    print("Image URL: ${product.featuredImage}");
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -84,12 +81,11 @@ class ProductCard extends StatelessWidget {
                     FilledButton(
                       onPressed: () async {
                         final cartItem = CartItem(
-                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          id: product.id,
                           name: product.name,
                           quantity: 1,
-                          imageUrl: product.featuredImage ??
-                              'assets/images/pizza.png',
-                          price: product.price.toDouble(),
+                          featuredImage: product.featuredImage!,
+                          price: product.price,
                         );
                         await context.read<CartManager>().addItem(cartItem);
 

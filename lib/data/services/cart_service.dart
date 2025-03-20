@@ -1,30 +1,22 @@
 import '../models/cart_item.dart';
 import 'pocketbase_client.dart';
-import 'package:pocketbase/pocketbase.dart';
 
 class CartService {
-  Future<String> getImageUrl(CartItem item) async {
-    final pb = await getPocketbaseInstance();
-    final record = await pb.collection('cart_items').getOne(item.id);
-    final imageUrl =
-        pb.files.getUrl(record, record.data['featuredImage']).toString();
-    return imageUrl;
-  }
-
   Future<List<CartItem>> fetchCartItems() async {
     final List<CartItem> items = [];
     try {
       final pb = await getPocketbaseInstance();
       final userId = pb.authStore.record!.id;
-      print('User ID: $userId');
-      final cartItemModels = await pb
-          .collection('cart_items')
-          .getFullList(filter: "user = '$userId'");
-      print('Cart items: $cartItemModels');
+      final cartItemModels = await pb.collection('cart_items').getFullList(
+          filter: "user = '$userId' && status = 'Active'", expand: 'product');
       for (final cartItemModel in cartItemModels) {
         final item = CartItem.fromJson(cartItemModel.toJson());
-        final imageUrl = await getImageUrl(item);
-        items.add(item.copyWith(imageUrl: imageUrl));
+        final products = cartItemModel.expand['product'];
+        final product = products?.first;
+
+        final imageUrl =
+            pb.files.getUrl(product!, product.data['featuredImage']).toString();
+        items.add(item.copyWith(featuredImage: imageUrl));
       }
       return items;
     } catch (error) {
@@ -37,8 +29,22 @@ class CartService {
     try {
       final pb = await getPocketbaseInstance();
       final userId = pb.authStore.record!.id;
+      final existingItems = await pb.collection('cart_items').getFullList(
+            filter:
+                "user = '$userId' && product = '${item.id}' && status = 'Active'",
+          );
+      if (existingItems.isNotEmpty) {
+        final existingItem = existingItems.first;
+        final newQuantity = existingItem.data['quantity'] + item.quantity;
+        await pb.collection('cart_items').update(existingItem.id, body: {
+          'quantity': newQuantity,
+        });
+        return;
+      }
       await pb.collection('cart_items').create(body: {
         'user': userId,
+        'product': item.id,
+        'status': 'Active',
         ...item.toJson(),
       });
     } catch (error) {
@@ -58,30 +64,38 @@ class CartService {
   }
 
   Future<void> deleteCartItem(CartItem item) async {
-    final pb = await getPocketbaseInstance();
-    await pb.collection('cart_items').delete(item.id);
+    try {
+      final pb = await getPocketbaseInstance();
+
+      await pb.collection('cart_items').update(item.id, body: {
+        'status': 'Deleted',
+      });
+    } catch (error) {
+      print('Error soft-deleting cart item: $error');
+    }
   }
 
   Future<void> clearCart() async {
-    final pb = await getPocketbaseInstance();
-    final userId = pb.authStore.record!.id;
-    final cartItemModels = await pb
-        .collection('cart_items')
-        .getFullList(filter: "user = '$userId'");
-    for (final cartItemModel in cartItemModels) {
-      await pb.collection('cart_items').delete(cartItemModel.id);
+    try {
+      final pb = await getPocketbaseInstance();
+      final userId = pb.authStore.record!.id;
+
+      final cartItemModels = await pb.collection('cart_items').getFullList(
+            filter: "user = '$userId' && status = 'Active'",
+          );
+
+      for (final cartItem in cartItemModels) {
+        await pb.collection('cart_items').update(cartItem.id, body: {
+          'status': 'Deleted',
+        });
+      }
+    } catch (error) {
+      print('Error clearing cart: $error');
     }
   }
 
   Future<void> saveCart(List<CartItem> items) async {
-    final pb = await getPocketbaseInstance();
-    final userId = pb.authStore.record!.id;
-    final cartItemModels = await pb
-        .collection('cart_items')
-        .getFullList(filter: "user = '$userId'");
-    for (final cartItemModel in cartItemModels) {
-      await pb.collection('cart_items').delete(cartItemModel.id);
-    }
+    await clearCart();
     for (final item in items) {
       await addCartItem(item);
     }

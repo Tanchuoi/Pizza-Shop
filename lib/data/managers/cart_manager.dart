@@ -78,26 +78,22 @@ class CartManager extends ChangeNotifier {
   // Clear cart
   void clearCart() {
     _items = [];
+    cartService.clearCart();
     notifyListeners();
   }
 
   // Add item to cart
   Future<void> addItem(CartItem item) async {
-    final existingIndex = _items.indexWhere((i) => i.id == item.id);
-
-    if (existingIndex >= 0) {
-      _items[existingIndex].quantity += item.quantity;
-      await updateQuantity(item, _items[existingIndex].quantity);
-    } else {
-      await cartService.addCartItem(item);
-      await loadCart();
-    }
+    await cartService.addCartItem(item);
+    await loadCart();
+    notifyListeners();
   }
 
   // Save cart to database (mock implementation)
   Future<void> saveCart() async {
     try {
       await cartService.saveCart(_items);
+      notifyListeners();
     } catch (e) {
       print('Error saving cart: $e');
     }
