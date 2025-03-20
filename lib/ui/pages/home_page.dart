@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Xin chào, ${userManager.user?.fullName}',
+                  'Xin chào, ${userManager.user?.fullName?.isNotEmpty == true ? userManager.user!.fullName : 'quý khách'}',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -267,18 +267,16 @@ class _HomePageState extends State<HomePage> {
                 topRight: Radius.circular(8),
               ),
               child: Image.network(
-                product.featuredImage ?? 'assets/images/pizza.png',
+                product.featuredImage ?? '',
                 height: 120,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/pizza.png',
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  );
-                },
+                errorBuilder: (context, error, stackTrace) => Image.asset(
+                  'assets/images/pizza.png',
+                  height: 120,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(

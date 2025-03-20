@@ -51,18 +51,21 @@ class CartItemCard extends StatelessWidget {
               // Pizza image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: (item.imageUrl != null && item.imageUrl!.isNotEmpty)
+                child: (item.featuredImage != '' &&
+                        item.featuredImage!.isNotEmpty)
                     ? Image.network(
-                        item.imageUrl!,
+                        item.featuredImage!,
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.image_not_supported,
-                              size: 100);
-                        },
                       )
-                    : const Icon(Icons.image_not_supported, size: 100),
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.grey[300],
+                        child:
+                            const Icon(Icons.local_pizza, color: Colors.grey),
+                      ),
               ),
               const SizedBox(width: 16),
 

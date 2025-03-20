@@ -14,11 +14,13 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late final Future<void> _fetchOrders;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _fetchOrders = context.read<OrderManager>().fetchOrders();
   }
 
   @override
@@ -47,9 +49,9 @@ class _OrderPageState extends State<OrderPage>
     }
   }
 
-  void _cancelOrder(BuildContext context, String orderId) {
+  void _cancelOrder(BuildContext context, String orderId) async {
     final orderManager = context.read<OrderManager>();
-    final success = orderManager.cancelOrder(orderId);
+    final success = await orderManager.cancelOrder(orderId);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,9 +64,9 @@ class _OrderPageState extends State<OrderPage>
     }
   }
 
-  void _reorder(BuildContext context, String orderId) {
+  void _reorder(BuildContext context, String orderId) async {
     final orderManager = context.read<OrderManager>();
-    final newOrderId = orderManager.reorder(orderId);
+    final newOrderId = await orderManager.reorder(orderId);
 
     if (newOrderId != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,36 +95,51 @@ class _OrderPageState extends State<OrderPage>
           ],
         ),
       ),
-      body: Consumer<OrderManager>(
-        builder: (context, orderManager, child) {
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              // Active orders tab
-              OrderList(
-                orders: orderManager.activeOrders,
-                onViewDetails: (orderId) => _viewOrderDetails(context, orderId),
-                onCancelOrder: (orderId) => _cancelOrder(context, orderId),
-                onReorder: (orderId) => _reorder(context, orderId),
-              ),
+      body: FutureBuilder(
+        future: _fetchOrders,
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return Consumer<OrderManager>(
+              builder: (context, orderManager, child) {
+                return TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Active orders tab
+                    OrderList(
+                      orders: orderManager.activeOrders,
+                      onViewDetails: (orderId) =>
+                          _viewOrderDetails(context, orderId),
+                      onCancelOrder: (orderId) =>
+                          _cancelOrder(context, orderId),
+                      onReorder: (orderId) => _reorder(context, orderId),
+                    ),
 
-              // Completed orders tab
-              OrderList(
-                orders: orderManager.completedOrders,
-                onViewDetails: (orderId) => _viewOrderDetails(context, orderId),
-                onCancelOrder: (orderId) => _cancelOrder(context, orderId),
-                onReorder: (orderId) => _reorder(context, orderId),
-              ),
+                    // Completed orders tab
+                    OrderList(
+                      orders: orderManager.completedOrders,
+                      onViewDetails: (orderId) =>
+                          _viewOrderDetails(context, orderId),
+                      onCancelOrder: (orderId) =>
+                          _cancelOrder(context, orderId),
+                      onReorder: (orderId) => _reorder(context, orderId),
+                    ),
 
-              // Canceled orders tab
-              OrderList(
-                orders: orderManager.canceledOrders,
-                onViewDetails: (orderId) => _viewOrderDetails(context, orderId),
-                onCancelOrder: (orderId) => _cancelOrder(context, orderId),
-                onReorder: (orderId) => _reorder(context, orderId),
-              ),
-            ],
-          );
+                    // Canceled orders tab
+                    OrderList(
+                      orders: orderManager.canceledOrders,
+                      onViewDetails: (orderId) =>
+                          _viewOrderDetails(context, orderId),
+                      onCancelOrder: (orderId) =>
+                          _cancelOrder(context, orderId),
+                      onReorder: (orderId) => _reorder(context, orderId),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         },
       ),
     );

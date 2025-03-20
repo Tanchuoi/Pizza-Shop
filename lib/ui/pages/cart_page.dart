@@ -1,8 +1,8 @@
-import 'package:ct312h_project/data/models/cart_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/managers/cart_manager.dart';
 import '../widgets/cart_item_card.dart';
+import '../../data/managers/order_manager.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -186,19 +186,30 @@ class _CartPageState extends State<CartPage> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Save cart and navigate to checkout
-                cartManager.saveCart().then((_) {
+                final success = await context.read<OrderManager>().placeOrder(
+                      cartManager.items,
+                      cartManager.totalPrice,
+                      'Hà Nội, Việt Nam',
+                    );
+                if (success) {
+                  //cartManager.markItemsAsCheckedOut(cartManager.items);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Đang xử lý, vui lòng chờ...'),
+                      content: Text('Đặt hàng thành công!'),
                       backgroundColor: Colors.green,
                     ),
                   );
                   cartManager.clearCart();
-                  // Navigate to checkout screen
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutScreen()));
-                });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Đã xảy ra lỗi, vui lòng thử lại sau!'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
