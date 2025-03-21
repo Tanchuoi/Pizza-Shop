@@ -12,8 +12,25 @@ class OrderDetailsScreen extends StatelessWidget {
     required this.order,
   }) : super(key: key);
 
+  double getSizePrice(String size) {
+    switch (size) {
+      case "S":
+        return 0;
+      case "M":
+        return 5000;
+      case "L":
+        return 10000;
+      default:
+        return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final subtotal =
+        context.read<OrderManager>().calculateSubtotal(order.items);
+    final sumSizePrice =
+        context.read<OrderManager>().calculateSizePrice(order.items);
     return Scaffold(
       appBar: AppBar(
         title: Text('Hóa đơn #${order.id}'),
@@ -207,7 +224,15 @@ class OrderDetailsScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${item.price.toStringAsFixed(2)} x ${item.quantity}đ',
+                                      'Kích cỡ: ${getSizePrice(item.size!).toStringAsFixed(2)}đ x ${item.quantity}',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Số lượng: ${item.price.toStringAsFixed(2)}đ x ${item.quantity}',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -219,7 +244,7 @@ class OrderDetailsScreen extends StatelessWidget {
 
                               // Item total
                               Text(
-                                '${(item.price * item.quantity).toStringAsFixed(2)}đ',
+                                '${((item.price + getSizePrice(item.size!)) * item.quantity).toStringAsFixed(2)}đ',
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -242,7 +267,23 @@ class OrderDetailsScreen extends StatelessWidget {
                               style: TextStyle(fontSize: 14),
                             ),
                             Text(
-                              '${(order.total - 5.0).toStringAsFixed(2)}đ',
+                              '${subtotal.toStringAsFixed(2)}đ',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tổng giá kích cỡ: ',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text(
+                              '${sumSizePrice.toStringAsFixed(2)}đ',
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],

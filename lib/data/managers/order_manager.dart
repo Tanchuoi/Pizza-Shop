@@ -9,6 +9,33 @@ class OrderManager extends ChangeNotifier {
   // This list will be filled from PocketBase later
   final List<Order> _orders = [];
 
+  double calculateSubtotal(List<CartItem> items) {
+    return items.fold(
+      0.0,
+      (sum, item) => sum + (item.price * item.quantity),
+    );
+  }
+
+  double _getSizePrice(String? size) {
+    switch (size) {
+      case 'S':
+        return 0.0;
+      case 'M':
+        return 5000.0;
+      case 'L':
+        return 10000.0;
+      default:
+        return 0.0;
+    }
+  }
+
+  double calculateSizePrice(List<CartItem> items) {
+    return items.fold(
+      0.0,
+      (sum, item) => sum + _getSizePrice(item.size) * item.quantity,
+    );
+  }
+
   List<Order> get allOrders => List.unmodifiable(_orders);
 
   List<Order> get activeOrders => _orders

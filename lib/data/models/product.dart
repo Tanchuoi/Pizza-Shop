@@ -1,3 +1,5 @@
+import 'package:ct312h_project/data/models/cart_item.dart';
+
 class Product {
   final String id;
   final String name;

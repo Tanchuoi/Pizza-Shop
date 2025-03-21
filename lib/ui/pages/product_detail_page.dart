@@ -1,5 +1,9 @@
+import 'package:ct312h_project/data/models/cart_item.dart';
+
+import '../../data/managers/cart_manager.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/product.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -11,20 +15,43 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  String selectedSize = "Vừa";
-  String selectedCrust = "Đế Kéo Tay";
+  String selectedSize = "M";
   int quantity = 1;
-  int totalPrice = 0;
+
+  double _getSizePrice(String size) {
+    switch (size) {
+      case "S":
+        return 0;
+      case "M":
+        return 5000;
+      case "L":
+        return 10000;
+      default:
+        return 0;
+    }
+  }
+
+  // Mapping internal value to Vietnamese label
+  String _getDisplaySize(String size) {
+    switch (size) {
+      case "S":
+        return "Nhỏ";
+      case "M":
+        return "Vừa";
+      case "L":
+        return "Lớn";
+      default:
+        return size;
+    }
+  }
 
   double calculateTotalPrice() {
-    double price = widget.product.price;
-    if (selectedSize == "Vừa") {
-      price += 50000;
-    } else if (selectedSize == "Lớn") {
-      price += 10000;
-    }
-    return price * quantity;
+    double basePrice = widget.product.price;
+    double sizePrice = _getSizePrice(selectedSize);
+    return (basePrice + sizePrice) * quantity;
   }
+
+  final List<String> sizes = ["S", "M", "L"];
 
   void incrementQuantity() {
     setState(() {
@@ -78,23 +105,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   SizedBox(height: 16),
 
                   // Dropdown for Pizza Size
-                  Text("Chọn kích thước bánh", style: TextStyle(fontSize: 16)),
-                  DropdownButton<String>(
-                    isExpanded: true,
-                    value: selectedSize,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedSize = newValue!;
-                      });
-                    },
-                    items: ["Nhỏ", "Vừa", "Lớn"]
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+                  if (widget.product.category == "pizza") ...[
+                    Text("Chọn cỡ bánh"),
+                    DropdownButton<String>(
+                      value: selectedSize,
+                      items: sizes.map((size) {
+                        return DropdownMenuItem(
+                          value: size,
+                          child: Text(_getDisplaySize(size)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSize = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -134,8 +161,22 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                onPressed: () {
-                  print("da them san pham");
+                onPressed: () async {
+                  final cartItem = CartItem(
+                      id: widget.product.id,
+                      name: widget.product.name,
+                      quantity: quantity,
+                      featuredImage: widget.product.featuredImage!,
+                      price: widget.product.price,
+                      size: selectedSize,
+                      category: widget.product.category);
+                  await context.read<CartManager>().addItem(cartItem);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Đã thêm vào giỏ hàng'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),

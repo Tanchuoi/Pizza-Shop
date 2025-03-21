@@ -46,7 +46,6 @@ class OrderService {
 
       for (final record in orderRecords) {
         final json = record.toJson();
-        print('Raw cart item json: $json');
         // Expand cart items using fromJson
         final expandedCartItems = record.expand['cart_items'] ?? [];
         json['cart_items'] = expandedCartItems.map((item) {

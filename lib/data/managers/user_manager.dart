@@ -47,4 +47,15 @@ class UserManager extends ChangeNotifier {
     _currentUser = null;
     notifyListeners();
   }
+
+  Future<bool> updateProfile(User user) async {
+    try {
+      await _userService.updateProfile(user);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("Profile update failed: $e");
+      return false;
+    }
+  }
 }

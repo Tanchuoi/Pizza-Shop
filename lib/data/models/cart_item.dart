@@ -4,6 +4,8 @@ class CartItem {
   int quantity;
   final String? featuredImage;
   final double price;
+  String? size;
+  String? category;
 
   CartItem({
     required this.id,
@@ -11,6 +13,8 @@ class CartItem {
     required this.quantity,
     required this.featuredImage,
     required this.price,
+    this.category,
+    this.size,
   });
 
   CartItem copyWith({
@@ -20,6 +24,8 @@ class CartItem {
     String? featuredImage,
     int? quantity,
     double? price,
+    String? category,
+    String? size,
   }) {
     return CartItem(
       id: id ?? this.id,
@@ -27,6 +33,8 @@ class CartItem {
       featuredImage: featuredImage ?? this.featuredImage,
       quantity: quantity ?? this.quantity,
       price: price ?? this.price,
+      category: category ?? this.category,
+      size: size ?? this.size,
     );
   }
 
@@ -50,6 +58,8 @@ class CartItem {
       featuredImage: expandedProduct != null
           ? "http://10.0.2.2:8090/api/files/${expandedProduct['collectionId']}/${expandedProduct['id']}/${expandedProduct['featuredImage']}"
           : null,
+      category: expandedProduct != null ? expandedProduct['category'] : null,
+      size: json['size'],
     );
   }
 }

@@ -1,22 +1,27 @@
+import 'dart:convert';
+
 class User {
   final String? id;
   final String fullName;
-  final String username;
+  final String? username;
   final String email;
   final String? phoneNumber;
   final String? address;
-  final String? birthDate;
+  final DateTime birthDate;
   final String? avatar;
+  final String? gender;
 
   User(
       {this.id,
-      required this.username,
+      this.username,
       required this.fullName,
       required this.email,
       this.phoneNumber,
       this.address,
-      this.birthDate,
-      this.avatar});
+      DateTime? birthDate,
+      this.gender,
+      this.avatar})
+      : birthDate = birthDate ?? DateTime.now();
 
   User copyWith({
     String? id,
@@ -26,6 +31,7 @@ class User {
     String? phoneNumber,
     String? address,
     String? birthDate,
+    String? gender,
     String? avatar,
   }) {
     return User(
@@ -35,34 +41,36 @@ class User {
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       address: address ?? this.address,
-      birthDate: birthDate ?? this.birthDate,
+      birthDate: DateTime.parse(birthDate ?? this.birthDate.toIso8601String()),
+      gender: gender ?? this.gender,
       avatar: avatar ?? this.avatar,
     );
   }
 
   Map<String, dynamic> toJson() {
     final data = {
-      'id': id,
       'username': username,
       'fullName': fullName,
       'email': email,
       'phoneNumber': phoneNumber,
       'address': address,
-      'birthDate': birthDate,
+      'gender': gender,
+      'birthDate': birthDate.toIso8601String(),
     };
 
     return data;
   }
 
-  factory User.fromJson(Map<String, dynamic> map) {
+  factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: map['id'],
-      fullName: map['fullName'] ?? '',
-      username: map['username'],
-      email: map['email'],
-      phoneNumber: map['phoneNumber'],
-      address: map['address'],
-      birthDate: map['birthDate'],
+      id: json['id'],
+      fullName: json['fullName'] ?? '',
+      username: json['username'],
+      email: json['email'],
+      phoneNumber: json['phoneNumber'],
+      address: json['address'],
+      gender: json['gender'],
+      birthDate: DateTime.parse(json['birthDate']),
     );
   }
 }

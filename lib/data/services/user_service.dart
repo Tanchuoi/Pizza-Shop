@@ -57,4 +57,20 @@ class UserService {
     final pb = await getPocketbaseInstance();
     pb.authStore.clear();
   }
+
+  Future<void> updateProfile(User user) async {
+    final pb = await getPocketbaseInstance();
+    final userId = pb.authStore.record?.id;
+    try {
+      await pb.collection('users').update(
+            userId!,
+            body: user.toJson(),
+          );
+    } catch (error) {
+      if (error is ClientException) {
+        throw Exception(error.response['message']);
+      }
+      throw Exception('An error occurred');
+    }
+  }
 }

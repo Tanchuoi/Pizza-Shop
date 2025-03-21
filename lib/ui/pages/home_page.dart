@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/managers/user_manager.dart';
-import '../../data/managers/product_manager.dart';
 import '../../data/models/product.dart';
 import '../../data/services/product_service.dart';
 import 'product_detail_page.dart';
@@ -123,27 +122,20 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Giao hàng tận nơi',
+                          'Giao hàng',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          '91 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều',
+                          'Giao hàng tận nơi',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 14,
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                  Text(
-                    'Thay đổi',
-                    style: TextStyle(
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

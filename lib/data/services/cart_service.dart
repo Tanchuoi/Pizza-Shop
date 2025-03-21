@@ -38,6 +38,8 @@ class CartService {
         final newQuantity = existingItem.data['quantity'] + item.quantity;
         await pb.collection('cart_items').update(existingItem.id, body: {
           'quantity': newQuantity,
+          'size': item.size,
+          'category': item.category,
         });
         return;
       }
@@ -45,6 +47,7 @@ class CartService {
         'user': userId,
         'product': item.id,
         'status': 'Active',
+        'size': item.size,
         ...item.toJson(),
       });
     } catch (error) {
@@ -52,11 +55,22 @@ class CartService {
     }
   }
 
-  Future<void> updateCartItem(CartItem item, int newQuantity) async {
+  Future<void> updateQuantity(CartItem item, int newQuantity) async {
     try {
       final pb = await getPocketbaseInstance();
       await pb.collection('cart_items').update(item.id, body: {
         'quantity': newQuantity,
+      });
+    } catch (error) {
+      print('Error updating cart item: $error');
+    }
+  }
+
+  Future<void> updateSize(CartItem item, String newSize) async {
+    try {
+      final pb = await getPocketbaseInstance();
+      await pb.collection('cart_items').update(item.id, body: {
+        'size': newSize,
       });
     } catch (error) {
       print('Error updating cart item: $error');

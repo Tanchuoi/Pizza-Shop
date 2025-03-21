@@ -139,7 +139,23 @@ class _CartPageState extends State<CartPage> {
             ],
           ),
           const SizedBox(height: 8),
-
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Tổng giá kích thước:',
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                '${cartManager.totalSizePrice.toStringAsFixed(2)}đ',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           // Delivery fee row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

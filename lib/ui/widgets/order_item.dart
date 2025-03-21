@@ -214,6 +214,19 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
   }
 
   Widget _buildOrderItemRow(CartItem item) {
+    double getSizePrice(String size) {
+      switch (size) {
+        case "S":
+          return 0;
+        case "M":
+          return 5000;
+        case "L":
+          return 10000;
+        default:
+          return 0;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -250,7 +263,21 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                   ),
                 ),
                 Text(
-                  '${item.quantity} x ${item.price.toStringAsFixed(2)}đ',
+                  'Size: ${item.size}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  'Size Price:${item.quantity} x ${getSizePrice(item.size!)}đ',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                Text(
+                  'Amount: ${item.quantity} x ${item.price.toStringAsFixed(2)}đ',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -262,7 +289,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
 
           // Item total
           Text(
-            '${(item.price * item.quantity).toStringAsFixed(2)}đ',
+            'Total: ${((item.price + getSizePrice(item.size!)) * item.quantity).toStringAsFixed(2)}đ',
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
