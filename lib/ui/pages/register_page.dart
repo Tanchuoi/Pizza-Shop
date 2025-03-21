@@ -70,6 +70,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    double inputWidth =
+        MediaQuery.of(context).size.width > 600 ? 600 : double.infinity;
+
     return Scaffold(
       appBar: AppBar(
         title: Image.asset("assets/images/logo.png", height: 40),
@@ -78,67 +81,90 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _fullNameController,
-              decoration: _inputDecoration('Họ và tên'),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _fullNameController,
+                decoration: _inputDecoration('Họ và tên'),
+              ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _usernameController,
-              decoration: _inputDecoration('Tên đăng nhập'),
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _usernameController,
+                decoration: _inputDecoration('Tên đăng nhập'),
+              ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _emailController,
-              decoration: _inputDecoration('Email'),
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _emailController,
+                decoration: _inputDecoration('Email'),
+              ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _phoneController,
-              decoration: _inputDecoration('Số điện thoại'),
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _phoneController,
+                decoration: _inputDecoration('Số điện thoại'),
+              ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              obscureText: _obscurePassword,
-              decoration: _inputDecoration('Mật khẩu').copyWith(
-                suffixIcon: IconButton(
-                  icon: Icon(_obscurePassword
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      _obscurePassword = !_obscurePassword;
-                    });
-                  },
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _passwordController,
+                obscureText: _obscurePassword,
+                decoration: _inputDecoration('Mật khẩu').copyWith(
+                  suffixIcon: IconButton(
+                    icon: Icon(_obscurePassword
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: _obscureConfirm,
-              decoration: _inputDecoration('Xác nhận mật khẩu').copyWith(
-                suffixIcon: IconButton(
-                  icon: Icon(_obscureConfirm
-                      ? Icons.visibility
-                      : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirm = !_obscureConfirm;
-                    });
-                  },
+            SizedBox(
+              width: inputWidth,
+              child: TextField(
+                controller: _confirmPasswordController,
+                obscureText: _obscureConfirm,
+                decoration: _inputDecoration('Xác nhận mật khẩu').copyWith(
+                  suffixIcon: IconButton(
+                    icon: Icon(_obscureConfirm
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirm = !_obscureConfirm;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 40),
-            OutlinedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
+            SizedBox(
+              width: inputWidth,
+              child: OutlinedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: _handleRegister,
+                child: const Text('Đăng ký'),
               ),
-              onPressed: _handleRegister,
-              child: const Text('Đăng ký'),
             ),
             const SizedBox(height: 20),
             Row(

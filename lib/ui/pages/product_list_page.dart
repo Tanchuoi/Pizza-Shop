@@ -46,6 +46,8 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<ProductManager>(context).products;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -71,8 +73,10 @@ class _ProductListPageState extends State<ProductListPage> {
               : GridView.builder(
                   padding: EdgeInsets.all(10),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.6,
+                    crossAxisCount:
+                        isPortrait ? 2 : 4, // More columns in landscape mode
+                    childAspectRatio:
+                        isPortrait ? 0.6 : 0.65, // Adjust ratio for landscape
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
