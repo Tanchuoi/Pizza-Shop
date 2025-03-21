@@ -1,0 +1,2 @@
+D:/Code/MobileDevelopment/project/ct312hm03-project-Tanchuoi/android/app/.cxx/Debug/225d6k2b/x86_64/CMakeFiles/edit_cache.dir
+D:/Code/MobileDevelopment/project/ct312hm03-project-Tanchuoi/android/app/.cxx/Debug/225d6k2b/x86_64/CMakeFiles/rebuild_cache.dir
