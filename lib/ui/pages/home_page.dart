@@ -101,97 +101,206 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDeliveryOptions() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Delivery Option
-          Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.delivery_dining,
-                    color: Colors.green[600],
-                    size: 40,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Giao hàng tận nơi',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          '91 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    'Thay đổi',
-                    style: TextStyle(
-                      color: Colors.green[600],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+    bool isEditing = false;
+    final addressController = TextEditingController();
+    final userManager = Provider.of<UserManager>(context, listen: false);
+    final currentAddress =
+        userManager.user?.address ?? '91 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều';
 
-          // Takeaway Option
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Icon(Icons.shopping_bag, color: Colors.green[600], size: 40),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    // Initialize the controller with the current address
+    addressController.text = currentAddress;
+
+    // Function to handle address updates
+    Future<void> handleAddressUpdate(String newAddress) async {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+
+        // Call the updateAddress method to store in database
+        await userManager.updateAddress(newAddress);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Địa chỉ đã được cập nhật')),
+        );
+      } catch (e) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Không thể cập nhật địa chỉ: ${e.toString()}')),
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+
+    return StatefulBuilder(builder: (context, setLocalState) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Delivery Option
+            Card(
+              shape: Border(
+                bottom: BorderSide(color: Colors.grey[100]!),
+              ),
+              margin: const EdgeInsets.only(bottom: 12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        const Text(
-                          'Mua mang về',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        Icon(
+                          Icons.delivery_dining,
+                          color: Colors.green[600],
+                          size: 40,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Giao hàng tận nơi',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (!isEditing)
+                                Text(
+                                  currentAddress,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                        Text(
-                          'Tìm cửa hàng gần nhất',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
+                        if (!isEditing)
+                          TextButton(
+                            onPressed: () {
+                              setLocalState(() {
+                                isEditing = true;
+                                addressController.text = currentAddress;
+                              });
+                            },
+                            child: const Text(
+                              'Thay đổi',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     ),
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: Colors.green[600],
-                    size: 30,
-                  ),
-                ],
+                    // Show TextField when editing
+                    if (isEditing)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: addressController,
+                                decoration: InputDecoration(
+                                  hintText: 'Nhập địa chỉ mới',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                ),
+                                onSubmitted: (value) async {
+                                  setLocalState(() {
+                                    isEditing = false;
+                                  });
+                                  await handleAddressUpdate(value);
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.check, color: Colors.green),
+                              onPressed: () async {
+                                setLocalState(() {
+                                  isEditing = false;
+                                });
+                                await handleAddressUpdate(
+                                    addressController.text);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.red),
+                              onPressed: () {
+                                setLocalState(() {
+                                  isEditing = false;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+
+            // Takeaway Option
+            Card(
+              shape: Border(
+                bottom: BorderSide(color: Colors.grey[100]!),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.shopping_bag,
+                        color: Colors.green[600], size: 40),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Mua mang về',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Tìm cửa hàng gần nhất',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: Colors.green[600],
+                      size: 30,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildRecommendedSection() {

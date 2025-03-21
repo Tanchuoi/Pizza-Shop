@@ -57,4 +57,13 @@ class UserService {
     final pb = await getPocketbaseInstance();
     pb.authStore.clear();
   }
+
+  Future<void> updateAddress(String address) async {
+    final pb = await getPocketbaseInstance();
+    final user = await getCurrentUser();
+    if (user == null) {
+      throw Exception('User not found');
+    }
+    await pb.collection('users').update(user.id!, body: {'address': address});
+  }
 }

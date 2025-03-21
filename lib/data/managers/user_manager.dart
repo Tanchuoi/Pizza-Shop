@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../models/user.dart';
 import '../services/user_service.dart';
 
@@ -46,5 +45,18 @@ class UserManager extends ChangeNotifier {
     await _userService.logout();
     _currentUser = null;
     notifyListeners();
+  }
+
+  Future<void> updateAddress(String address) async {
+    try {
+      await _userService.updateAddress(address);
+
+      if (_currentUser != null) {
+        _currentUser = _currentUser!.copyWith(address: address);
+        notifyListeners();
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
