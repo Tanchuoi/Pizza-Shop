@@ -1,3 +1,5 @@
+import 'package:ct312h_project/ui/pages/product_list_page.dart'
+    show ProductListPage;
 import 'package:flutter/material.dart';
 
 class CustomNavBar extends StatelessWidget {
@@ -35,13 +37,32 @@ class CustomNavBar extends StatelessWidget {
           onTap: onTap,
         ),
         Positioned(
-          top: -25, // Adjust this to move the floating button
-          left: MediaQuery.of(context).size.width / 2 - 35, // Centering
+          top: -25,
+          left: MediaQuery.of(context).size.width / 2 - 35,
           child: Column(
             children: [
               FloatingActionButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/product-list');
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          ProductListPage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(1.0, 0.0); // Slide from right
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+
+                        var tween = Tween(begin: begin, end: end)
+                            .chain(CurveTween(curve: curve));
+
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
                 },
                 backgroundColor: Colors.white,
                 elevation: 5,
@@ -49,7 +70,7 @@ class CustomNavBar extends StatelessWidget {
                 child: const Icon(Icons.local_pizza,
                     size: 30, color: Colors.black),
               ),
-              const SizedBox(height: 4), // Space between button and label
+              const SizedBox(height: 4),
               const Text(
                 'Thực đơn',
                 style: TextStyle(

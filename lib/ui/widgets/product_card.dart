@@ -23,7 +23,6 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: SizedBox(
-        height: 350, // Adjust height to prevent overflow
         child: Card(
           elevation: 3,
           shape:
@@ -31,49 +30,59 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                child: product.featuredImage != null
-                    ? Image.network(
-                        product.featuredImage!,
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          print("Error loading image: $error");
-                          return Image.asset(
-                            'assets/images/pizza.png', // Fallback image
-                            height: 120,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        'assets/images/pizza.png', // Default image when URL is null
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+              Hero(
+                tag: product.id,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  child: product.featuredImage != null
+                      ? Image.network(
+                          product.featuredImage!,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print("Error loading image: $error");
+                            return Image.asset(
+                              'assets/images/pizza.png', // Fallback image
+                              height: 120,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/images/pizza.png', // Default image when URL is null
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.name,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text(
-                      product.description,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey),
+                    SizedBox(
+                      height: 40,
+                      child: Text(product.name,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
-                    SizedBox(height: 8),
 
-                    // **Dropdowns for Pizza Size and Crust**
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        product.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Divider(),
+                    SizedBox(height: 8),
+                    // **Dropdowns for Pizza Size**
                     Text("Chọn cỡ bánh"),
+                    SizedBox(height: 8),
                     _buildDropdownButton(["Nhỏ", "Vừa", "Lớn"]),
 
                     SizedBox(height: 8),

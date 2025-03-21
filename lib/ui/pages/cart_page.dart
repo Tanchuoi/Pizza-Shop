@@ -27,8 +27,6 @@ class _CartPageState extends State<CartPage> {
           'Giỏ hàng của bạn',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
       ),
       body: FutureBuilder(
           future: _fetchCartItems,
@@ -109,7 +107,6 @@ class _CartPageState extends State<CartPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),

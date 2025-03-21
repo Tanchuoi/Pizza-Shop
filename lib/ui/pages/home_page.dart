@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Text(
-                  'Danh sách sẽ thay đổi theo định vị của bạn',
+                  'Danh sách sẽ thay đổi theo ngày',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -252,6 +252,7 @@ class _HomePageState extends State<HomePage> {
         );
       },
       child: Container(
+        height: 220,
         width: 160,
         margin: const EdgeInsets.only(right: 12), // Add spacing between cards
         decoration: BoxDecoration(
@@ -284,16 +285,18 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  SizedBox(
+                    height: 44,
+                    child: Text(
+                      product.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
                   Text(
                     "${product.price}đ",
                     style: const TextStyle(

@@ -53,7 +53,7 @@ class _ProductListPageState extends State<ProductListPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart_outlined, color: Colors.black),
+            icon: Icon(Icons.shopping_cart_outlined),
             onPressed: () => Navigator.pushNamed(context, '/cart'),
           ),
         ],
@@ -72,7 +72,7 @@ class _ProductListPageState extends State<ProductListPage> {
                   padding: EdgeInsets.all(10),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.5,
+                    childAspectRatio: 0.6,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -102,12 +102,11 @@ class _ProductListPageState extends State<ProductListPage> {
                         style: TextStyle(
                           color: selectedCategory == category["value"]
                               ? Colors.white
-                              : Colors.black,
+                              : Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                       ),
                       selected: selectedCategory == category["value"],
                       selectedColor: Colors.red,
-                      backgroundColor: Colors.white,
                       onSelected: (selected) {
                         if (selected) {
                           _updateProductsByCategory(category["value"]!);

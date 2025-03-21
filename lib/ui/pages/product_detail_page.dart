@@ -55,11 +55,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       body: Column(
         children: [
           // Product Image with Hero Animation
-          Image.network(
-            widget.product.featuredImage!,
-            height: 200,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          Hero(
+            tag: widget.product.id,
+            child: Image.network(
+              widget.product.featuredImage!,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
           ),
 
           // Product Details
