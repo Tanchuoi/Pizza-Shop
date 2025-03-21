@@ -185,5 +185,84 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         }
       },
     );
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text("Cập nhật thông tin"),
+    //     leading: IconButton(
+    //       icon: Icon(Icons.arrow_back),
+    //       onPressed: () => Navigator.pop(context),
+    //     ),
+    //   ),
+    //   body: SingleChildScrollView(
+    //     child: Padding(
+    //       padding: const EdgeInsets.all(16.0),
+    //       child: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: [
+    //           Text("Tên của bạn*"),
+    //           TextField(
+    //             decoration: InputDecoration(
+    //               border: OutlineInputBorder(),
+    //             ),
+    //           ),
+    //           SizedBox(height: 12),
+    //           Text("Giới tính"),
+    //           DropdownButtonFormField<String>(
+    //             decoration: InputDecoration(
+    //               border: OutlineInputBorder(),
+    //             ),
+    //             value: "Nam",
+    //             items: ["Nam", "Nữ"].map((String value) {
+    //               return DropdownMenuItem<String>(
+    //                 value: value,
+    //                 child: Text(value),
+    //               );
+    //             }).toList(),
+    //             onChanged: (String? newValue) {},
+    //           ),
+    //           SizedBox(height: 12),
+    //           Text("Chọn ngày sinh"),
+    //           TextFormField(
+    //             controller: _dateController,
+    //             readOnly: true, // Prevent manual input
+    //             decoration: InputDecoration(
+    //               suffixIcon: Icon(Icons.calendar_today), // Calendar icon
+    //               border: OutlineInputBorder(),
+    //             ),
+    //             onTap: () =>
+    //                 _selectDate(context), // Show date picker when tapped
+    //           ),
+    //           SizedBox(height: 12),
+    //           Text("Email*"),
+    //           TextField(
+    //             decoration: InputDecoration(
+    //               border: OutlineInputBorder(),
+    //             ),
+    //           ),
+    //           SizedBox(height: 12),
+    //           Text("Số điện thoại*"),
+    //           TextField(
+    //             decoration: InputDecoration(
+    //               border: OutlineInputBorder(),
+    //             ),
+    //           ),
+    //           SizedBox(height: 20),
+    //           SizedBox(
+    //             width: double.infinity,
+    //             child: ElevatedButton(
+    //               style: ElevatedButton.styleFrom(
+    //                 padding: EdgeInsets.symmetric(vertical: 16),
+    //                 backgroundColor: Theme.of(context).primaryColor,
+    //               ),
+    //               onPressed: () {},
+    //               child:
+    //                   Text("Cập nhật", style: TextStyle(color: Colors.white)),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }

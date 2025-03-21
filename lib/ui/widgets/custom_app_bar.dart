@@ -1,6 +1,5 @@
 import 'package:ct312h_project/ui/shared/theme_notifier.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -32,8 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             Navigator.pushNamed(context, '/cart');
           },
-          color:
-              Theme.of(context).iconTheme.color, // Use theme-aware icon color
+          color: Theme.of(context).iconTheme.color,
         ),
       ],
     );

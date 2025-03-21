@@ -57,55 +57,76 @@ class _ProductCardState extends State<ProductCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                child: widget.product.featuredImage != null
-                    ? Image.network(
-                        widget.product.featuredImage!,
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          print("Error loading image: $error");
-                          return Image.asset(
-                            'assets/images/pizza.png', // Fallback image
-                            height: 120,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        'assets/images/pizza.png', // Default image when URL is null
-                        height: 120,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+              Hero(
+                tag: widget.product.id,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  child: widget.product.featuredImage != null
+                      ? Image.network(
+                          widget.product.featuredImage!,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            print("Error loading image: $error");
+                            return Image.asset(
+                              'assets/images/pizza.png', // Fallback image
+                              height: 120,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          'assets/images/pizza.png', // Default image when URL is null
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.product.name,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text(
-                      widget.product.description,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey),
+                    // Text(widget.product.name,
+                    //     style: TextStyle(fontWeight: FontWeight.bold)),
+                    // SizedBox(height: 4),
+                    // Text(
+                    //   widget.product.description,
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    //   style: TextStyle(color: Colors.grey),
+
+                    SizedBox(
+                      height: 40,
+                      child: Text(widget.product.name,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
-                    SizedBox(height: 8),
 
                     // **Dropdowns for Pizza Size and Crust**
                     if (widget.product.category == "pizza") ...[
                       Text("Chọn cỡ bánh"),
                       _buildDropdownButton(sizeDisplayMap),
                     ],
+                    // SizedBox(
+                    //   height: 20,
+                    //   child: Text(
+                    //     product.description,
+                    //     maxLines: 1,
+                    //     overflow: TextOverflow.ellipsis,
+                    //     style: TextStyle(color: Colors.grey),
+                    //   ),
+                    // ),
+                    // Divider(),
+                    // SizedBox(height: 8),
+                    // // **Dropdowns for Pizza Size**
+                    // Text("Chọn cỡ bánh"),
+                    // SizedBox(height: 8),
+                    // _buildDropdownButton(["Nhỏ", "Vừa", "Lớn"]),
 
                     SizedBox(height: 8),
-                    // **Button to Add to Cart**
 
                     FilledButton(
                       onPressed: () async {
