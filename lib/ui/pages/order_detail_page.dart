@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../data/models/order.dart';
 import '../../data/managers/order_manager.dart';
+import '../../data/managers/user_manager.dart';
 import 'package:intl/intl.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -27,6 +28,9 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userManager = Provider.of<UserManager>(context);
+    final currentAddress =
+        userManager.user?.address ?? '91 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều';
     final subtotal =
         context.read<OrderManager>().calculateSubtotal(order.items);
     final sumSizePrice =
@@ -146,7 +150,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              order.deliveryAddress,
+                              currentAddress,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[700],

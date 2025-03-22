@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../../data/models/user.dart';
 import '../../data/managers/user_manager.dart';
 import 'package:provider/provider.dart';
@@ -93,20 +92,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                     ),
-                    value: "Nam",
-                    items: ["Nam", "Nữ"].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                    value: _selectedGender,
+                    items: [
+                      DropdownMenuItem(value: "Male", child: Text("Nam")),
+                      DropdownMenuItem(value: "Female", child: Text("Nữ")),
+                    ],
                     onChanged: (String? newValue) {
                       setState(() {
-                        if (newValue == 'Nam') {
-                          _selectedGender = 'Male';
-                        } else {
-                          _selectedGender = 'Female';
-                        }
+                        _selectedGender = newValue!;
                       });
                     },
                   ),

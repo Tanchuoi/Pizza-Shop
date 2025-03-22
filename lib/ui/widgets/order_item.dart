@@ -2,6 +2,8 @@ import 'package:ct312h_project/ui/shared/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import '../../data/models/order.dart';
 import '../../data/models/cart_item.dart';
+import '../../data/managers/user_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class OrderItemWidget extends StatefulWidget {
@@ -27,6 +29,9 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final userManager = Provider.of<UserManager>(context);
+    final currentAddress =
+        userManager.user?.address ?? '91 Đ. 3 Tháng 2, Hưng Lợi, Ninh Kiều';
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
       elevation: 2,
@@ -102,7 +107,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  widget.order.deliveryAddress,
+                  currentAddress,
                   style: const TextStyle(fontSize: 14),
                 ),
                 const SizedBox(height: 12),

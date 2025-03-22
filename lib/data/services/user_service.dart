@@ -61,11 +61,15 @@ class UserService {
   Future<void> updateProfile(User user) async {
     final pb = await getPocketbaseInstance();
     final userId = pb.authStore.record?.id;
+
+    if (userId == null) throw Exception("User ID not found");
+
     try {
-      await pb.collection('users').update(
-            userId!,
-            body: user.toJson(),
-          );
+      // Remove email from the update payload
+      final userData = user.toJson();
+      userData.remove("email"); // Prevent direct email update
+
+      await pb.collection('users').update(userId, body: userData);
     } catch (error) {
       if (error is ClientException) {
         throw Exception(error.response['message']);
