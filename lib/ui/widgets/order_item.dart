@@ -139,8 +139,8 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                         onPressed: () async {
                           bool? confirm = await showConfirmDialog(
                               context,
-                              'Xác nhận xóa hoá đơn',
-                              'Bạn có chắc chắn muốn xóa hoá đơn này?');
+                              'Xác nhận hủy hoá đơn',
+                              'Bạn có chắc chắn muốn hủy hoá đơn này?');
 
                           if (confirm == true) {
                             widget.onCancelOrder(widget.order.id);
@@ -268,21 +268,21 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
                   ),
                 ),
                 Text(
-                  'Size: ${item.size}',
+                  'Kích cỡ: ${item.size}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
                   ),
                 ),
                 Text(
-                  'Size Price:${item.quantity} x ${getSizePrice(item.size!)}đ',
+                  'Giá kích cỡ: ${item.quantity} x ${getSizePrice(item.size!)}đ',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
                   ),
                 ),
                 Text(
-                  'Amount: ${item.quantity} x ${item.price.toStringAsFixed(2)}đ',
+                  'Số lượng: ${item.quantity} x ${item.price.toStringAsFixed(2)}đ',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -294,7 +294,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
 
           // Item total
           Text(
-            'Total: ${((item.price + getSizePrice(item.size!)) * item.quantity).toStringAsFixed(2)}đ',
+            'Tổng cộng: ${((item.price + getSizePrice(item.size!)) * item.quantity).toStringAsFixed(2)}đ',
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -313,8 +313,6 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
         return Colors.green;
       case 'canceled':
         return Colors.red;
-      case 'processing':
-        return Colors.blue;
       default:
         return Colors.grey;
     }

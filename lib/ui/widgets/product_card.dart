@@ -90,41 +90,44 @@ class _ProductCardState extends State<ProductCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(widget.product.name,
-                    //     style: TextStyle(fontWeight: FontWeight.bold)),
-                    // SizedBox(height: 4),
+                    Text(widget.product.name,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
                     // Text(
                     //   widget.product.description,
                     //   maxLines: 1,
                     //   overflow: TextOverflow.ellipsis,
                     //   style: TextStyle(color: Colors.grey),
 
-                    SizedBox(
-                      height: 40,
-                      child: Text(widget.product.name,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
+                    // SizedBox(
+                    //   height: 40,
+                    //   child: Text(widget.product.name,
+                    //       style: TextStyle(fontWeight: FontWeight.bold)),
+                    // ),
 
-                    // **Dropdowns for Pizza Size and Crust**
+                    // // **Dropdowns for Pizza Size and Crust**
+                    // if (widget.product.category == "pizza") ...[
+                    //   Text("Chọn cỡ bánh"),
+                    //   _buildDropdownButton(sizeDisplayMap),
+                    // ],
+                    SizedBox(
+                      height: 20,
+                      child: Text(
+                        widget.product.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    Divider(),
+                    SizedBox(height: 8),
+                    // **Dropdowns for Pizza Size**
+
                     if (widget.product.category == "pizza") ...[
                       Text("Chọn cỡ bánh"),
+                      SizedBox(height: 8),
                       _buildDropdownButton(sizeDisplayMap),
                     ],
-                    // SizedBox(
-                    //   height: 20,
-                    //   child: Text(
-                    //     product.description,
-                    //     maxLines: 1,
-                    //     overflow: TextOverflow.ellipsis,
-                    //     style: TextStyle(color: Colors.grey),
-                    //   ),
-                    // ),
-                    // Divider(),
-                    // SizedBox(height: 8),
-                    // // **Dropdowns for Pizza Size**
-                    // Text("Chọn cỡ bánh"),
-                    // SizedBox(height: 8),
-                    // _buildDropdownButton(["Nhỏ", "Vừa", "Lớn"]),
 
                     SizedBox(height: 8),
 

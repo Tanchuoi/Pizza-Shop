@@ -370,7 +370,8 @@ class OrderDetailsScreen extends StatelessWidget {
                   ),
                 ),
 
-              if (order.status.toLowerCase() == 'delivered')
+              if (order.status.toLowerCase() == 'delivered' ||
+                  order.status.toLowerCase() == 'canceled')
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

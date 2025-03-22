@@ -55,11 +55,15 @@ class _OrderPageState extends State<OrderPage>
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hóa đơn #$orderId đã bị hủy bỏ!')),
+        SnackBar(
+            content: Text('Hóa đơn #$orderId đã bị hủy bỏ!'),
+            backgroundColor: Colors.green),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không thể hủy bỏ hóa đơn')),
+        const SnackBar(
+            content: Text('Không thể hủy bỏ hóa đơn'),
+            backgroundColor: Colors.red),
       );
     }
   }

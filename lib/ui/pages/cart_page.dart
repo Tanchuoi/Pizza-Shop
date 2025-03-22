@@ -57,6 +57,7 @@ class _CartPageState extends State<CartPage> {
                               item: item,
                               onUpdateQuantity: cartManager.updateQuantity,
                               onRemoveItem: cartManager.removeItem,
+                              onUpdateSize: cartManager.updateSize,
                             );
                           },
                         ),
