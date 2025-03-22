@@ -7,11 +7,13 @@ class CartItemCard extends StatefulWidget {
   final CartItem item;
   final Function(CartItem, int) onUpdateQuantity;
   final Function(CartItem) onRemoveItem;
+  final Function(CartItem, String) onUpdateSize;
 
   const CartItemCard({
     Key? key,
     required this.item,
     required this.onUpdateQuantity,
+    required this.onUpdateSize,
     required this.onRemoveItem,
   }) : super(key: key);
 
@@ -63,8 +65,25 @@ class _CartItemCardState extends State<CartItemCard> {
         ),
       ),
       confirmDismiss: (direction) async {
-        return showConfirmDialog(context, 'Xác nhận xóa sản phẩm',
-            'Bạn có chắc chắn muốn xóa sản phẩm này?');
+        final confirmed = await showConfirmDialog(
+          context,
+          'Xác nhận xóa sản phẩm',
+          'Bạn có chắc chắn muốn xóa sản phẩm này?',
+        );
+
+        if (confirmed!) {
+          // Wait for the widget to dismiss first, then show snackbar
+          Future.delayed(Duration(milliseconds: 300), () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Đã xóa sản phẩm'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+          return true;
+        }
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
@@ -191,6 +210,7 @@ class _CartItemCardState extends State<CartItemCard> {
                                 if (newValue != null) {
                                   setState(() {
                                     widget.item.size = newValue;
+                                    widget.onUpdateSize(widget.item, newValue);
                                     selectedPrice = getSizePrice(newValue);
                                   });
                                 }
