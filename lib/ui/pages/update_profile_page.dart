@@ -10,32 +10,62 @@ class UpdateProfilePage extends StatefulWidget {
 }
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
-  var selectedDate;
+  DateTime? selectedDate;
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  String _selectedGender = "Male";
+  String? _selectedGender;
+  bool _isInitialized = false;
 
   @override
   void dispose() {
     _dateController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(), // Default to today's date
-      firstDate: DateTime(1900), // Earliest selectable date
-      lastDate: DateTime(2100), // Latest selectable date
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
 
     if (pickedDate != null) {
       String formattedDate = DateFormat('dd/MM/yyyy').format(pickedDate);
       setState(() {
-        selectedDate = pickedDate; // Update the selected date
-        _dateController.text = formattedDate; // Update the text field
+        selectedDate = pickedDate;
+        _dateController.text = formattedDate;
+      });
+    }
+  }
+
+  // Initialize form with user data
+  void _initializeForm(User user) {
+    if (!_isInitialized) {
+      setState(() {
+        _nameController.text = user.fullName ?? '';
+        _emailController.text = user.email ?? '';
+        _phoneController.text = user.phoneNumber ?? '';
+
+        // Make sure gender is one of the available options
+        if (user.gender == 'Male' || user.gender == 'Female') {
+          _selectedGender = user.gender;
+        } else {
+          _selectedGender = 'Male'; // Default value
+        }
+
+        if (user.birthDate != null) {
+          selectedDate = user.birthDate;
+          _dateController.text =
+              DateFormat('dd/MM/yyyy').format(user.birthDate!);
+        }
+
+        _isInitialized = true;
       });
     }
   }
@@ -46,100 +76,114 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       future: context.read<UserManager>().fetchCurrentUser(),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          final user = context.read<UserManager>().user;
-          if (user == null) {
-            return Center(child: Text('User not found.'));
-          }
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          // Pre-fill the form fields (just once)
-          if (_nameController.text.isEmpty) {
-            _nameController.text = user.fullName ?? '';
-            _emailController.text = user.email ?? '';
-            _phoneController.text = user.phoneNumber ?? '';
-            _selectedGender = user.gender ?? 'Male';
+        final user = context.read<UserManager>().user;
+        if (user == null) {
+          return const Scaffold(
+            body: Center(child: Text('User not found.')),
+          );
+        }
 
-            if (user.birthDate != null) {
-              selectedDate = user.birthDate!;
-              _dateController.text =
-                  DateFormat('dd/MM/yyyy').format(user.birthDate!);
-            }
-          }
-          return Scaffold(
-            appBar: AppBar(
-              title: Text("Cập nhật thông tin"),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
+        // Initialize form with user data
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _initializeForm(user);
+        });
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Cập nhật thông tin"),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
-            body: Padding(
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Tên của bạn*"),
+                  const Text("Tên của bạn*"),
                   TextField(
                     controller: _nameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 12),
-                  Text("Giới tính"),
+                  const SizedBox(height: 12),
+                  const Text("Giới tính"),
                   DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                     value: _selectedGender,
-                    items: [
+                    items: const [
                       DropdownMenuItem(value: "Male", child: Text("Nam")),
                       DropdownMenuItem(value: "Female", child: Text("Nữ")),
                     ],
                     onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGender = newValue!;
-                      });
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedGender = newValue;
+                        });
+                      }
                     },
                   ),
-                  SizedBox(height: 12),
-                  Text("Chọn ngày sinh"),
+                  const SizedBox(height: 12),
+                  const Text("Chọn ngày sinh"),
                   TextFormField(
                     controller: _dateController,
-                    readOnly: true, // Prevent manual input
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.calendar_today), // Calendar icon
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      suffixIcon: Icon(Icons.calendar_today),
                       border: OutlineInputBorder(),
                     ),
-                    onTap: () =>
-                        _selectDate(context), // Show date picker when tapped
+                    onTap: () => _selectDate(context),
                   ),
-                  SizedBox(height: 12),
-                  Text("Email*"),
+                  const SizedBox(height: 12),
+                  const Text("Email*"),
                   TextField(
                     controller: _emailController,
-                    decoration: InputDecoration(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 12),
-                  Text("Số điện thoại*"),
+                  const SizedBox(height: 12),
+                  const Text("Số điện thoại*"),
                   TextField(
                     controller: _phoneController,
-                    decoration: InputDecoration(
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors.grey.shade700,
                       ),
                       onPressed: () async {
+                        if (_nameController.text.isEmpty ||
+                            _emailController.text.isEmpty ||
+                            _phoneController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Vui lòng điền đầy đủ thông tin bắt buộc.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
+
                         final success =
                             await context.read<UserManager>().updateProfile(
                                   User(
@@ -167,95 +211,16 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           );
                         }
                       },
-                      child: Text("Cập nhật",
+                      child: const Text("Cập nhật",
                           style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        }
+          ),
+        );
       },
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text("Cập nhật thông tin"),
-    //     leading: IconButton(
-    //       icon: Icon(Icons.arrow_back),
-    //       onPressed: () => Navigator.pop(context),
-    //     ),
-    //   ),
-    //   body: SingleChildScrollView(
-    //     child: Padding(
-    //       padding: const EdgeInsets.all(16.0),
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Text("Tên của bạn*"),
-    //           TextField(
-    //             decoration: InputDecoration(
-    //               border: OutlineInputBorder(),
-    //             ),
-    //           ),
-    //           SizedBox(height: 12),
-    //           Text("Giới tính"),
-    //           DropdownButtonFormField<String>(
-    //             decoration: InputDecoration(
-    //               border: OutlineInputBorder(),
-    //             ),
-    //             value: "Nam",
-    //             items: ["Nam", "Nữ"].map((String value) {
-    //               return DropdownMenuItem<String>(
-    //                 value: value,
-    //                 child: Text(value),
-    //               );
-    //             }).toList(),
-    //             onChanged: (String? newValue) {},
-    //           ),
-    //           SizedBox(height: 12),
-    //           Text("Chọn ngày sinh"),
-    //           TextFormField(
-    //             controller: _dateController,
-    //             readOnly: true, // Prevent manual input
-    //             decoration: InputDecoration(
-    //               suffixIcon: Icon(Icons.calendar_today), // Calendar icon
-    //               border: OutlineInputBorder(),
-    //             ),
-    //             onTap: () =>
-    //                 _selectDate(context), // Show date picker when tapped
-    //           ),
-    //           SizedBox(height: 12),
-    //           Text("Email*"),
-    //           TextField(
-    //             decoration: InputDecoration(
-    //               border: OutlineInputBorder(),
-    //             ),
-    //           ),
-    //           SizedBox(height: 12),
-    //           Text("Số điện thoại*"),
-    //           TextField(
-    //             decoration: InputDecoration(
-    //               border: OutlineInputBorder(),
-    //             ),
-    //           ),
-    //           SizedBox(height: 20),
-    //           SizedBox(
-    //             width: double.infinity,
-    //             child: ElevatedButton(
-    //               style: ElevatedButton.styleFrom(
-    //                 padding: EdgeInsets.symmetric(vertical: 16),
-    //                 backgroundColor: Theme.of(context).primaryColor,
-    //               ),
-    //               onPressed: () {},
-    //               child:
-    //                   Text("Cập nhật", style: TextStyle(color: Colors.white)),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }

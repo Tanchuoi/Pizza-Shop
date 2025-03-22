@@ -76,7 +76,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     crossAxisCount:
                         isPortrait ? 2 : 4, // More columns in landscape mode
                     childAspectRatio:
-                        isPortrait ? 0.6 : 0.65, // Adjust ratio for landscape
+                        isPortrait ? 0.7 : 0.65, // Adjust ratio for landscape
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
