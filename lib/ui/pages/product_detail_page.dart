@@ -84,12 +84,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           // Product Image with Hero Animation
           Hero(
             tag: widget.product.id,
-            child: Image.network(
-              widget.product.featuredImage!,
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+            child: (widget.product.featuredImage != '' &&
+                    widget.product.featuredImage!.isNotEmpty)
+                ? Image.network(
+                    widget.product.featuredImage!,
+                    width: double.infinity,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    width: double.infinity,
+                    height: 200,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.local_pizza, color: Colors.grey),
+                  ),
           ),
 
           // Product Details

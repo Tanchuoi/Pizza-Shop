@@ -39,6 +39,7 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
+    print("Image URL: ${widget.product.featuredImage}");
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -61,27 +62,20 @@ class _ProductCardState extends State<ProductCard> {
                 tag: widget.product.id,
                 child: ClipRRect(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                  child: widget.product.featuredImage != null
+                  child: (widget.product.featuredImage != '' &&
+                          widget.product.featuredImage!.isNotEmpty)
                       ? Image.network(
                           widget.product.featuredImage!,
-                          height: 120,
                           width: double.infinity,
+                          height: 120,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            print("Error loading image: $error");
-                            return Image.asset(
-                              'assets/images/pizza.png', // Fallback image
-                              height: 120,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            );
-                          },
                         )
-                      : Image.asset(
-                          'assets/images/pizza.png', // Default image when URL is null
-                          height: 120,
+                      : Container(
                           width: double.infinity,
-                          fit: BoxFit.cover,
+                          height: 120,
+                          color: Colors.grey[300],
+                          child:
+                              const Icon(Icons.local_pizza, color: Colors.grey),
                         ),
                 ),
               ),

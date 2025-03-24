@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class CartItem {
   final String id;
   final String name;
@@ -56,7 +58,7 @@ class CartItem {
       quantity: json['quantity'],
       price: (json['price'] as num).toDouble(),
       featuredImage: expandedProduct != null
-          ? "http://10.0.2.2:8090/api/files/${expandedProduct['collectionId']}/${expandedProduct['id']}/${expandedProduct['featuredImage']}"
+          ? "${dotenv.env['POCKETBASE_URL']}api/files/${expandedProduct['collectionId']}/${expandedProduct['id']}/${expandedProduct['featuredImage']}"
           : null,
       category: expandedProduct != null ? expandedProduct['category'] : null,
       size: json['size'],

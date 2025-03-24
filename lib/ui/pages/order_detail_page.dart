@@ -196,8 +196,8 @@ class OrderDetailsScreen extends StatelessWidget {
                               // Item image
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: item.featuredImage != null &&
-                                        item.featuredImage!.isNotEmpty
+                                child: (item.featuredImage != '' &&
+                                        item.featuredImage!.isNotEmpty)
                                     ? Image.network(
                                         item.featuredImage!,
                                         width: 50,
@@ -205,8 +205,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                         fit: BoxFit.cover,
                                       )
                                     : Container(
-                                        width: 60,
-                                        height: 60,
+                                        width: 50,
+                                        height: 50,
                                         color: Colors.grey[300],
                                         child: const Icon(Icons.local_pizza,
                                             color: Colors.grey),

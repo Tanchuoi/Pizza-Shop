@@ -1,4 +1,4 @@
-import 'package:ct312h_project/data/models/cart_item.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Product {
   final String id;
@@ -23,9 +23,8 @@ class Product {
       name: json['name'] ?? 'Unknown Product',
       description: json['description'] ?? 'No description available',
       price: (json['price'] ?? 0).toDouble(), // Ensure it's a double
-      featuredImage: (json['featuredImage'] != null &&
-              json['featuredImage'].isNotEmpty)
-          ? "http://10.0.2.2:8090/api/files/${json['collectionId']}/${json['id']}/${json['featuredImage']}"
+      featuredImage: json['featuredImage'] != null
+          ? "${dotenv.env['POCKETBASE_URL']}api/files/${json['collectionId']}/${json['id']}/${json['featuredImage']}"
           : null, // ✅ If missing, set to null
       category: json['category'] ?? 'uncategorized',
     );

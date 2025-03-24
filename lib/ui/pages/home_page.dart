@@ -375,18 +375,20 @@ class _HomePageState extends State<HomePage> {
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
               ),
-              child: Image.network(
-                product.featuredImage ?? '',
-                height: 120,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Image.asset(
-                  'assets/images/pizza.png',
-                  height: 120,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: (product.featuredImage != '' &&
+                      product.featuredImage!.isNotEmpty)
+                  ? Image.network(
+                      product.featuredImage!,
+                      width: double.infinity,
+                      height: 120,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 120,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.local_pizza, color: Colors.grey),
+                    ),
             ),
             Padding(
               padding: const EdgeInsets.all(8),

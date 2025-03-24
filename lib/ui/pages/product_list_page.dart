@@ -49,6 +49,7 @@ class _ProductListPageState extends State<ProductListPage> {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
     final cartManager = Provider.of<CartManager>(context);
+    cartManager.loadCart();
 
     return Scaffold(
       appBar: AppBar(

@@ -219,6 +219,7 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
   }
 
   Widget _buildOrderItemRow(CartItem item) {
+    print("Item: ${item.featuredImage}");
     double getSizePrice(String size) {
       switch (size) {
         case "S":
@@ -239,16 +240,16 @@ class _OrderItemWidgetState extends State<OrderItemWidget> {
           // Item image
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: item.featuredImage != null && item.featuredImage!.isNotEmpty
+            child: (item.featuredImage != '' && item.featuredImage!.isNotEmpty)
                 ? Image.network(
                     item.featuredImage!,
-                    width: 50,
-                    height: 50,
+                    width: 60,
+                    height: 60,
                     fit: BoxFit.cover,
                   )
                 : Container(
-                    width: 50,
-                    height: 50,
+                    width: 70,
+                    height: 100,
                     color: Colors.grey[300],
                     child: const Icon(Icons.local_pizza, color: Colors.grey),
                   ),

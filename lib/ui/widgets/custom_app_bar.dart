@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Consumer<CartManager>(
       builder: (ctx, cartManager, child) {
+        cartManager.loadCart();
         return AppBar(
           leading: ValueListenableBuilder<ThemeMode>(
             valueListenable: ThemeNotifier.themeMode,
