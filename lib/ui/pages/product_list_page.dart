@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data/models/product.dart';
 import '../../data/managers/product_manager.dart';
+import '../../data/managers/cart_manager.dart';
 import '../widgets/product_card.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -48,6 +48,7 @@ class _ProductListPageState extends State<ProductListPage> {
     final products = Provider.of<ProductManager>(context).products;
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+    final cartManager = Provider.of<CartManager>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +56,12 @@ class _ProductListPageState extends State<ProductListPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart_outlined),
+            icon: Badge.count(
+              count: cartManager.productCount,
+              child: const Icon(
+                Icons.shopping_cart_outlined,
+              ),
+            ),
             onPressed: () => Navigator.pushNamed(context, '/cart'),
           ),
         ],
@@ -76,7 +82,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     crossAxisCount:
                         isPortrait ? 2 : 4, // More columns in landscape mode
                     childAspectRatio:
-                        isPortrait ? 0.50 : 0.65, // Adjust ratio for landscape
+                        isPortrait ? 0.55 : 0.65, // Adjust ratio for landscape
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),

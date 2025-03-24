@@ -4,7 +4,7 @@ class User {
   final String? id;
   final String fullName;
   final String? username;
-  final String email;
+  final String? email;
   final String? phoneNumber;
   final String? address;
   final DateTime birthDate;
@@ -15,7 +15,7 @@ class User {
       {this.id,
       this.username,
       required this.fullName,
-      required this.email,
+      this.email,
       this.phoneNumber,
       this.address,
       DateTime? birthDate,

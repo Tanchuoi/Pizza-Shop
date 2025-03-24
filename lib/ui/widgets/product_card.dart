@@ -90,26 +90,11 @@ class _ProductCardState extends State<ProductCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.product.name,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    // Text(
-                    //   widget.product.description,
-                    //   maxLines: 1,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   style: TextStyle(color: Colors.grey),
-
-                    // SizedBox(
-                    //   height: 40,
-                    //   child: Text(widget.product.name,
-                    //       style: TextStyle(fontWeight: FontWeight.bold)),
-                    // ),
-
-                    // // **Dropdowns for Pizza Size and Crust**
-                    // if (widget.product.category == "pizza") ...[
-                    //   Text("Chọn cỡ bánh"),
-                    //   _buildDropdownButton(sizeDisplayMap),
-                    // ],
+                    SizedBox(
+                      height: 40,
+                      child: Text(widget.product.name,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                     SizedBox(
                       height: 20,
                       child: Text(

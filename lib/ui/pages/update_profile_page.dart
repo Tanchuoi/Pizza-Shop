@@ -13,7 +13,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   DateTime? selectedDate;
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   String? _selectedGender;
   bool _isInitialized = false;
@@ -22,7 +21,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   void dispose() {
     _dateController.dispose();
     _nameController.dispose();
-    _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
@@ -49,7 +47,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (!_isInitialized) {
       setState(() {
         _nameController.text = user.fullName ?? '';
-        _emailController.text = user.email ?? '';
         _phoneController.text = user.phoneNumber ?? '';
 
         // Make sure gender is one of the available options
@@ -145,15 +142,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     onTap: () => _selectDate(context),
                   ),
                   const SizedBox(height: 12),
-                  const Text("Email*"),
-                  TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
                   const Text("Số điện thoại*"),
                   TextField(
                     controller: _phoneController,
@@ -172,7 +160,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                       ),
                       onPressed: () async {
                         if (_nameController.text.isEmpty ||
-                            _emailController.text.isEmpty ||
                             _phoneController.text.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -188,7 +175,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             await context.read<UserManager>().updateProfile(
                                   User(
                                     fullName: _nameController.text,
-                                    email: _emailController.text,
                                     phoneNumber: _phoneController.text,
                                     birthDate: selectedDate,
                                     gender: _selectedGender,
